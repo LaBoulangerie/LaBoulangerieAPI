@@ -1,0 +1,6 @@
+name: LaBoulangerieAPI
+version: 1.0-SNAPSHOT
+main: net.laboulangerie.api.LaBoulangerieAPI
+api-version: 1.19
+authors: [PainOchoco]
+depend: [Towny, LaBoulangerieMmo]
