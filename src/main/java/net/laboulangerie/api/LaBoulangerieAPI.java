@@ -1,5 +1,6 @@
 package net.laboulangerie.api;
 
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,7 +9,11 @@ import com.google.gson.GsonBuilder;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import io.javalin.Javalin;
@@ -17,18 +22,22 @@ import io.javalin.openapi.plugin.OpenApiConfiguration;
 import io.javalin.openapi.plugin.OpenApiPlugin;
 import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
+import io.javalin.websocket.WsContext;
 import net.laboulangerie.api.controllers.NationController;
 import net.laboulangerie.api.controllers.PlayerController;
 import net.laboulangerie.api.controllers.ServerController;
 import net.laboulangerie.api.controllers.TownController;
+import net.laboulangerie.api.listeners.TownyListener;
 
 public class LaBoulangerieAPI extends JavaPlugin {
     public static LaBoulangerieAPI PLUGIN;
     private static Javalin app = null;
+    private static final List<WsContext> wsList = new ArrayList<>();
 
     @Override
     public void onEnable() {
         LaBoulangerieAPI.PLUGIN = this;
+        registerListeners();
         setupJavalin();
         getLogger().info("Enabled Successfully");
     }
@@ -101,11 +110,36 @@ public class LaBoulangerieAPI extends JavaPlugin {
             });
         });
 
+        app.ws("/ws/towny", ws -> {
+            ws.onConnect(ctx -> {
+                wsList.add(ctx);
+            });
+
+            ws.onClose(ctx -> {
+                wsList.remove(ctx);
+            });
+        });
+
         app.error(404, ctx -> {
             String[] pastries = { "🥖", "🥐", "🍞", "🥨", "🧇", "🥯", "🥞" };
             ctx.result("You seem lost, here get a pastry! " + pastries[new Random().nextInt(pastries.length)]);
         });
 
         Thread.currentThread().setContextClassLoader(classLoader);
+    }
+
+    private void registerListeners() {
+        List<Listener> listeners = Arrays.asList(
+                new TownyListener());
+
+        listeners.forEach(l -> getServer().getPluginManager().registerEvents(l, this));
+    }
+
+    static public void broadcast(Serializable serializable) {
+        for (WsContext ctx : wsList) {
+            if (ctx.session.isOpen()) {
+                ctx.send(serializable);
+            }
+        }
     }
 }
