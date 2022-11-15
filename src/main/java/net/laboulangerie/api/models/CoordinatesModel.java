@@ -2,28 +2,34 @@ package net.laboulangerie.api.models;
 
 import java.io.Serializable;
 
-public class TownBlockModel implements Serializable {
-    private int x = 0;
-    private int z = 0;
+public class CoordinatesModel implements Serializable {
+    private double x = 0;
+    private double y = 0;
+    private double z = 0;
     private String type = null;
     private String world = null;
 
-    public TownBlockModel() {
-    }
-
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public int getZ() {
+    public double getY() {
+        return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public double getZ() {
         return z;
     }
 
-    public void setZ(int z) {
+    public void setZ(double z) {
         this.z = z;
     }
 

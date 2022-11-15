@@ -17,7 +17,8 @@ public class TownModel implements Serializable {
     private long registered = 0;
     private String mapColor = null;
     private List<NameUuidModel> residents = Collections.emptyList();
-    private List<TownBlockModel> townBlocks = Collections.emptyList();
+    private CoordinatesModel spawn = null;
+    private List<CoordinatesModel> townBlocks = Collections.emptyList();
     private Boolean isNeutral = null;
     private Boolean isOpen = null;
     private Boolean isPublic = null;
@@ -113,11 +114,19 @@ public class TownModel implements Serializable {
         this.residents = residents;
     }
 
-    public List<TownBlockModel> getTownBlocks() {
+    public CoordinatesModel getSpawn() {
+        return spawn;
+    }
+
+    public void setSpawn(CoordinatesModel spawn) {
+        this.spawn = spawn;
+    }
+
+    public List<CoordinatesModel> getTownBlocks() {
         return townBlocks;
     }
 
-    public void setTownBlocks(List<TownBlockModel> townBlocks) {
+    public void setTownBlocks(List<CoordinatesModel> townBlocks) {
         this.townBlocks = townBlocks;
     }
 
@@ -144,4 +153,5 @@ public class TownModel implements Serializable {
     public void setIsPublic(Boolean isPublic) {
         this.isPublic = isPublic;
     }
+
 }

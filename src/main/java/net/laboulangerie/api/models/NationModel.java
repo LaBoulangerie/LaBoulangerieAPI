@@ -19,12 +19,10 @@ public class NationModel implements Serializable {
     private List<NameUuidModel> residents = Collections.emptyList();
     private List<NameUuidModel> enemies = Collections.emptyList();
     private List<NameUuidModel> allies = Collections.emptyList();
+    private CoordinatesModel spawn;
     private Boolean isNeutral = null;
     private Boolean isOpen = null;
     private Boolean isPublic = null;
-
-    public NationModel() {
-    }
 
     public String getName() {
         return name;
@@ -128,6 +126,14 @@ public class NationModel implements Serializable {
 
     public void setAllies(List<NameUuidModel> allies) {
         this.allies = allies;
+    }
+
+    public CoordinatesModel getSpawn() {
+        return spawn;
+    }
+
+    public void setSpawn(CoordinatesModel spawn) {
+        this.spawn = spawn;
     }
 
     public Boolean getIsNeutral() {

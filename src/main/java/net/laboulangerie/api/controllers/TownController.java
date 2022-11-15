@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.bukkit.Location;
+
 import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
@@ -20,7 +23,7 @@ import io.javalin.openapi.OpenApiResponse;
 import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 import net.laboulangerie.api.models.NameUuidModel;
-import net.laboulangerie.api.models.TownBlockModel;
+import net.laboulangerie.api.models.CoordinatesModel;
 import net.laboulangerie.api.models.TownModel;
 
 public class TownController {
@@ -116,11 +119,26 @@ public class TownController {
 
         townModel.setResidents(residentModels);
 
+        Location spawn;
+
+        try {
+            spawn = town.getSpawn();
+            CoordinatesModel spawnModel = new CoordinatesModel();
+            spawnModel.setX(spawn.getX());
+            spawnModel.setY(spawn.getY());
+            spawnModel.setZ(spawn.getZ());
+            spawnModel.setWorld(spawn.getWorld().getName());
+            spawnModel.setType("spawn");
+
+            townModel.setSpawn(spawnModel);
+        } catch (TownyException ignored) {
+        }
+
         List<TownBlock> townBlocks = town.getTownBlocks().stream().collect(Collectors.toList());
-        List<TownBlockModel> townBlockModels = new ArrayList<>();
+        List<CoordinatesModel> townBlockModels = new ArrayList<>();
 
         for (TownBlock townBlock : townBlocks) {
-            TownBlockModel townBlockModel = new TownBlockModel();
+            CoordinatesModel townBlockModel = new CoordinatesModel();
 
             townBlockModel.setX(townBlock.getX());
             townBlockModel.setZ(townBlock.getZ());

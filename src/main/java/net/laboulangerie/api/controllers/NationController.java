@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.bukkit.Location;
+
 import com.palmergames.bukkit.towny.TownyUniverse;
+import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
@@ -18,6 +21,7 @@ import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiResponse;
 import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
+import net.laboulangerie.api.models.CoordinatesModel;
 import net.laboulangerie.api.models.NameUuidModel;
 import net.laboulangerie.api.models.NationModel;
 
@@ -150,6 +154,21 @@ public class NationController {
         }
 
         nationModel.setAllies(allyModels);
+
+        Location spawn;
+
+        try {
+            spawn = nation.getSpawn();
+            CoordinatesModel spawnModel = new CoordinatesModel();
+            spawnModel.setX(spawn.getX());
+            spawnModel.setY(spawn.getY());
+            spawnModel.setZ(spawn.getZ());
+            spawnModel.setWorld(spawn.getWorld().getName());
+            spawnModel.setType("spawn");
+
+            nationModel.setSpawn(spawnModel);
+        } catch (TownyException ignored) {
+        }
 
         nationModel.setIsNeutral(nation.isNeutral());
         nationModel.setIsOpen(nation.isOpen());
