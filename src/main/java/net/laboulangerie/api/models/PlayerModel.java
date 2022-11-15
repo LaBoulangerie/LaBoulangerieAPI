@@ -12,9 +12,6 @@ public class PlayerModel implements Serializable {
     private ResidentModel resident = null;
     private MmoModel mmo = null;
 
-    public PlayerModel() {
-    }
-
     public String getName() {
         return name;
     }

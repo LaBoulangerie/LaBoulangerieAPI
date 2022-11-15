@@ -9,9 +9,6 @@ public class TalentModel implements Serializable {
     private double xpToNextLevel = 0;
     private double minLevelXp = 0;
 
-    public TalentModel() {
-    }
-
     public String getName() {
         return name;
     }

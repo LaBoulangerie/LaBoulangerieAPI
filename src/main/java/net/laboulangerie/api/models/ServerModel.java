@@ -13,9 +13,6 @@ public class ServerModel implements Serializable {
     private int maxPlayers = 0;
     private List<NameUuidModel> onlinePlayers = Collections.emptyList();
 
-    public ServerModel() {
-    }
-
     public String getName() {
         return name;
     }

@@ -8,9 +8,6 @@ public class MmoModel implements Serializable {
     private int palier = 0;
     private List<TalentModel> talents = Collections.emptyList();
 
-    public MmoModel() {
-    }
-
     public int getPalier() {
         return palier;
     }

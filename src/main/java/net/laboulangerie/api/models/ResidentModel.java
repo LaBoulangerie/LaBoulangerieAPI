@@ -18,9 +18,6 @@ public class ResidentModel implements Serializable {
     private String postfix = null;
     private String formattedName = null;
 
-    public ResidentModel() {
-    }
-
     public NameUuidModel getTown() {
         return town;
     }

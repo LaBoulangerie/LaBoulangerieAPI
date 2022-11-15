@@ -7,9 +7,6 @@ public class NameUuidModel implements Serializable {
     private String name = null;
     private UUID uuid = null;
 
-    public NameUuidModel() {
-    }
-
     public String getName() {
         return name;
     }
