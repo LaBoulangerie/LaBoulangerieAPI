@@ -150,7 +150,6 @@ public class PlayerController {
 
         Set<String> talentStrings = LaBoulangerieMmo.talentsRegistry
                 .generateTalentsDataHolder().keySet();
-        System.out.println(talentStrings);
         List<TalentModel> talentModels = new ArrayList<>();
 
         for (String talent : talentStrings) {
