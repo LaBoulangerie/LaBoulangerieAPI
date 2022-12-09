@@ -120,8 +120,8 @@ public class PlayerController {
             for (Resident friend : friends) {
                 NameUuidModel friendModel = new NameUuidModel();
 
-                friendModel.setName(friend.getPlayer().getName());
-                friendModel.setUuid(friend.getPlayer().getUniqueId());
+                friendModel.setName(friend.getName());
+                friendModel.setUuid(friend.getUUID());
 
                 friendsModelList.add(friendModel);
             }
