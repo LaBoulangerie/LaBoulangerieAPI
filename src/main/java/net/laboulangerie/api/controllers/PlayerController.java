@@ -31,12 +31,7 @@ import net.laboulangerie.laboulangeriemmo.api.player.MmoPlayer;
 
 public class PlayerController {
 
-    @OpenApi(summary = "Get all players", operationId = "getPlayers", path = "/player", methods = HttpMethod.GET, tags = {
-            "Player" }, responses = {
-                    @OpenApiResponse(status = "200", content = {
-                            @OpenApiContent(from = NameUuidModel[].class) })
-            })
-    public static void getPlayers(Context ctx) {
+    public static List<NameUuidModel> getAllPlayers() {
         ArrayList<NameUuidModel> players = new ArrayList<>();
         OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
 
@@ -49,7 +44,16 @@ public class PlayerController {
             players.add(model);
         }
 
-        ctx.json(players);
+        return players;
+    }
+
+    @OpenApi(summary = "Get all players", operationId = "getPlayers", path = "/player", methods = HttpMethod.GET, tags = {
+            "Player" }, responses = {
+                    @OpenApiResponse(status = "200", content = {
+                            @OpenApiContent(from = NameUuidModel[].class) })
+            })
+    public static void getPlayers(Context ctx) {
+        ctx.json(getAllPlayers());
     }
 
     @OpenApi(summary = "Get player with UUID", operationId = "getPlayer", path = "/player/{uuid}", pathParams = {

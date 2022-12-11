@@ -27,12 +27,7 @@ import net.laboulangerie.api.models.NationModel;
 
 public class NationController {
 
-    @OpenApi(summary = "Get all nations", operationId = "getNations", path = "/nation", methods = HttpMethod.GET, tags = {
-            "Nation" }, responses = {
-                    @OpenApiResponse(status = "200", content = {
-                            @OpenApiContent(from = NameUuidModel[].class) })
-            })
-    public static void getNations(Context ctx) {
+    public static List<NameUuidModel> getAllNations() {
         ArrayList<NameUuidModel> nationModels = new ArrayList<>();
         List<Nation> nations = TownyUniverse.getInstance().getNations().stream().collect(Collectors.toList());
 
@@ -45,7 +40,16 @@ public class NationController {
             nationModels.add(model);
         }
 
-        ctx.json(nationModels);
+        return nationModels;
+    }
+
+    @OpenApi(summary = "Get all nations", operationId = "getNations", path = "/nation", methods = HttpMethod.GET, tags = {
+            "Nation" }, responses = {
+                    @OpenApiResponse(status = "200", content = {
+                            @OpenApiContent(from = NameUuidModel[].class) })
+            })
+    public static void getNations(Context ctx) {
+        ctx.json(getAllNations());
     }
 
     @OpenApi(summary = "Get nation with UUID", operationId = "getNation", path = "/nation/{uuid}", pathParams = {

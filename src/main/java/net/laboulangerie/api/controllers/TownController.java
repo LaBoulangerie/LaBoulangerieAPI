@@ -28,13 +28,7 @@ import net.laboulangerie.api.models.TownModel;
 
 public class TownController {
 
-    @OpenApi(summary = "Get all towns", operationId = "getTowns", path = "/town", methods = HttpMethod.GET, tags = {
-            "Town" }, responses = {
-                    @OpenApiResponse(status = "200", content = {
-                            @OpenApiContent(from = NameUuidModel[].class) })
-            })
-
-    public static void getTowns(Context ctx) {
+    public static List<NameUuidModel> getAllTowns() {
         ArrayList<NameUuidModel> townModels = new ArrayList<>();
         List<Town> towns = TownyAPI.getInstance().getTowns();
 
@@ -47,7 +41,17 @@ public class TownController {
             townModels.add(model);
         }
 
-        ctx.json(townModels);
+        return townModels;
+    }
+
+    @OpenApi(summary = "Get all towns", operationId = "getTowns", path = "/town", methods = HttpMethod.GET, tags = {
+            "Town" }, responses = {
+                    @OpenApiResponse(status = "200", content = {
+                            @OpenApiContent(from = NameUuidModel[].class) })
+            })
+
+    public static void getTowns(Context ctx) {
+        ctx.json(getAllTowns());
     }
 
     @OpenApi(summary = "Get town with UUID", operationId = "getTown", path = "/town/{uuid}", pathParams = {

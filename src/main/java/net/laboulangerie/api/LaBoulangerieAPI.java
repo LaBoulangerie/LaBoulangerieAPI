@@ -25,6 +25,7 @@ import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
 import io.javalin.websocket.WsContext;
 import net.laboulangerie.api.controllers.NationController;
 import net.laboulangerie.api.controllers.PlayerController;
+import net.laboulangerie.api.controllers.SearchController;
 import net.laboulangerie.api.controllers.ServerController;
 import net.laboulangerie.api.controllers.TownController;
 import net.laboulangerie.api.listeners.TownyListener;
@@ -106,6 +107,11 @@ public class LaBoulangerieAPI extends JavaPlugin {
                 get(TownController::getTowns);
                 path("{uuid}", () -> {
                     get(TownController::getTown);
+                });
+            });
+            path("search", () -> {
+                path("{query}", () -> {
+                    get(SearchController::search);
                 });
             });
         });
