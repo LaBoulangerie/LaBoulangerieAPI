@@ -15,6 +15,7 @@ public class TownModel implements Serializable {
     private String tag = null;
     private String formattedName = null;
     private long registered = 0;
+    private int balance = 0;
     private String mapColor = null;
     private List<NameUuidModel> residents = Collections.emptyList();
     private CoordinatesModel spawn = null;
@@ -96,6 +97,14 @@ public class TownModel implements Serializable {
 
     public void setRegistered(long registered) {
         this.registered = registered;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 
     public String getMapColor() {

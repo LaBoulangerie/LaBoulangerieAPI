@@ -107,6 +107,7 @@ public class TownController {
         townModel.setTag(town.getTag());
         townModel.setFormattedName(town.getFormattedName());
         townModel.setRegistered(town.getRegistered());
+        townModel.setBalance((int) town.getAccount().getHoldingBalance());
         townModel.setMapColor(town.getMapColorHexCode());
 
         List<Resident> residents = town.getResidents();

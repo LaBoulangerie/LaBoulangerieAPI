@@ -14,6 +14,7 @@ public class NationModel implements Serializable {
     private String tag = null;
     private String formattedName = null;
     private long registered = 0;
+    private int balance = 0;
     private String mapColor = null;
     private List<NameUuidModel> towns = Collections.emptyList();
     private List<NameUuidModel> residents = Collections.emptyList();
@@ -86,6 +87,14 @@ public class NationModel implements Serializable {
 
     public void setRegistered(long registered) {
         this.registered = registered;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 
     public String getMapColor() {

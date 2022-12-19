@@ -101,6 +101,7 @@ public class NationController {
         nationModel.setTag(nation.getTag());
         nationModel.setFormattedName(nation.getFormattedName());
         nationModel.setRegistered(nation.getRegistered());
+        nationModel.setBalance((int) nation.getAccount().getHoldingBalance());
         nationModel.setMapColor(nation.getMapColorHexCode());
 
         List<Town> towns = nation.getTowns();
