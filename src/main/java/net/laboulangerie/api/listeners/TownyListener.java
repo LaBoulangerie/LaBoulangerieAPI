@@ -12,7 +12,6 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 
-import io.javalin.websocket.WsConnectContext;
 import net.laboulangerie.api.LaBoulangerieAPI;
 import net.laboulangerie.api.models.EventModel;
 import net.laboulangerie.api.models.NameUuidModel;
@@ -35,7 +34,7 @@ public class TownyListener implements Listener {
     }
 
     @EventHandler
-    public void onNewNation(NewNationEvent event, WsConnectContext ctx) {
+    public void onNewNation(NewNationEvent event) {
         EventModel eventModel = new EventModel();
         eventModel.setEvent(event.getEventName());
 
