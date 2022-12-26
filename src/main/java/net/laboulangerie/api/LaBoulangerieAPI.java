@@ -93,19 +93,19 @@ public class LaBoulangerieAPI extends JavaPlugin {
             });
             path("player", () -> {
                 get(PlayerController::getPlayers);
-                path("{uuid}", () -> {
+                path("{identifier}", () -> {
                     get(PlayerController::getPlayer);
                 });
             });
             path("nation", () -> {
                 get(NationController::getNations);
-                path("{uuid}", () -> {
+                path("{identifier}", () -> {
                     get(NationController::getNation);
                 });
             });
             path("town", () -> {
                 get(TownController::getTowns);
-                path("{uuid}", () -> {
+                path("{identifier}", () -> {
                     get(TownController::getTown);
                 });
             });

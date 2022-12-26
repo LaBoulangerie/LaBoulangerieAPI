@@ -13,7 +13,6 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 
-import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.openapi.HttpMethod;
@@ -62,22 +61,22 @@ public class PlayerController {
             "Player" },
 
             responses = {
-                    @OpenApiResponse(status = "400", content = { @OpenApiContent(from = BadRequestResponse.class) }),
                     @OpenApiResponse(status = "404", content = { @OpenApiContent(from = NotFoundResponse.class) }),
                     @OpenApiResponse(status = "200", content = {
                             @OpenApiContent(from = PlayerModel.class) })
             })
 
     public static void getPlayer(Context ctx) {
-        UUID uuid;
+        String identifier = ctx.pathParam("identifier");
+        OfflinePlayer offlinePlayer;
 
         try {
-            uuid = UUID.fromString(ctx.pathParam("uuid"));
-        } catch (Exception e) {
-            throw new BadRequestResponse();
-        }
+            UUID uuid = UUID.fromString(identifier);
+            offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+        } catch (Exception ignored) {
+            offlinePlayer = Bukkit.getOfflinePlayer(identifier);
 
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
+        }
 
         if (!offlinePlayer.hasPlayedBefore()) {
             throw new NotFoundResponse();
@@ -91,7 +90,7 @@ public class PlayerController {
         playerModel.setFirstPlayed(offlinePlayer.getFirstPlayed());
         playerModel.setLastSeen(offlinePlayer.getLastSeen());
 
-        Resident resident = TownyAPI.getInstance().getResident(uuid);
+        Resident resident = TownyAPI.getInstance().getResident(offlinePlayer.getUniqueId());
         ResidentModel residentModel = new ResidentModel();
 
         Town town = resident.getTownOrNull();

@@ -14,7 +14,6 @@ import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownBlock;
 
-import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.openapi.HttpMethod;
@@ -58,22 +57,21 @@ public class TownController {
             @OpenApiParam(name = "uuid", description = "UUID of the town")
     }, methods = HttpMethod.GET, tags = {
             "Town" }, responses = {
-                    @OpenApiResponse(status = "400", content = { @OpenApiContent(from = BadRequestResponse.class) }),
                     @OpenApiResponse(status = "404", content = { @OpenApiContent(from = NotFoundResponse.class) }),
                     @OpenApiResponse(status = "200", content = {
                             @OpenApiContent(from = TownModel.class) })
             })
 
     public static void getTown(Context ctx) {
-        UUID uuid;
+        String identifier = ctx.pathParam("identifier");
+        Town town;
 
         try {
-            uuid = UUID.fromString(ctx.pathParam("uuid"));
-        } catch (Exception e) {
-            throw new BadRequestResponse();
+            UUID uuid = UUID.fromString(identifier);
+            town = TownyAPI.getInstance().getTown(uuid);
+        } catch (Exception ignored) {
+            town = TownyAPI.getInstance().getTown(identifier);
         }
-
-        Town town = TownyAPI.getInstance().getTown(uuid);
 
         if (town == null) {
             throw new NotFoundResponse();

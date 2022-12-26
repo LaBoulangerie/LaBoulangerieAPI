@@ -13,7 +13,6 @@ import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.Town;
 
-import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.openapi.HttpMethod;
@@ -56,22 +55,21 @@ public class NationController {
             @OpenApiParam(name = "uuid", description = "UUID of the nation")
     }, methods = HttpMethod.GET, tags = {
             "Nation" }, responses = {
-                    @OpenApiResponse(status = "400", content = { @OpenApiContent(from = BadRequestResponse.class) }),
                     @OpenApiResponse(status = "404", content = { @OpenApiContent(from = NotFoundResponse.class) }),
                     @OpenApiResponse(status = "200", content = {
                             @OpenApiContent(from = NationModel.class) })
             })
 
     public static void getNation(Context ctx) {
-        UUID uuid;
+        String identifier = ctx.pathParam("identifier");
+        Nation nation;
 
         try {
-            uuid = UUID.fromString(ctx.pathParam("uuid"));
-        } catch (Exception e) {
-            throw new BadRequestResponse();
+            UUID uuid = UUID.fromString(identifier);
+            nation = TownyUniverse.getInstance().getNation(uuid);
+        } catch (Exception ignored) {
+            nation = TownyUniverse.getInstance().getNation(identifier);
         }
-
-        Nation nation = TownyUniverse.getInstance().getNation(uuid);
 
         if (nation == null) {
             throw new NotFoundResponse();
