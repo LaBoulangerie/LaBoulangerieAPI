@@ -51,8 +51,8 @@ public class NationController {
         ctx.json(getAllNations());
     }
 
-    @OpenApi(summary = "Get nation with UUID", operationId = "getNation", path = "/nation/{uuid}", pathParams = {
-            @OpenApiParam(name = "uuid", description = "UUID of the nation")
+    @OpenApi(summary = "Get nation with name or UUID", operationId = "getNation", path = "/nation/{identifier}", pathParams = {
+            @OpenApiParam(name = "identifier", description = "Name or UUID of the nation")
     }, methods = HttpMethod.GET, tags = {
             "Nation" }, responses = {
                     @OpenApiResponse(status = "404", content = { @OpenApiContent(from = NotFoundResponse.class) }),

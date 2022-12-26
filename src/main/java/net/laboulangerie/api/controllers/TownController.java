@@ -53,8 +53,8 @@ public class TownController {
         ctx.json(getAllTowns());
     }
 
-    @OpenApi(summary = "Get town with UUID", operationId = "getTown", path = "/town/{uuid}", pathParams = {
-            @OpenApiParam(name = "uuid", description = "UUID of the town")
+    @OpenApi(summary = "Get town with name or UUID", operationId = "getTown", path = "/town/{identifier}", pathParams = {
+            @OpenApiParam(name = "identifier", description = "Name or UUID of the town")
     }, methods = HttpMethod.GET, tags = {
             "Town" }, responses = {
                     @OpenApiResponse(status = "404", content = { @OpenApiContent(from = NotFoundResponse.class) }),

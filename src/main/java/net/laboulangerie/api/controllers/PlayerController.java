@@ -55,8 +55,8 @@ public class PlayerController {
         ctx.json(getAllPlayers());
     }
 
-    @OpenApi(summary = "Get player with UUID", operationId = "getPlayer", path = "/player/{uuid}", pathParams = {
-            @OpenApiParam(name = "uuid", description = "UUID of the player")
+    @OpenApi(summary = "Get player with name or UUID", operationId = "getPlayer", path = "/player/{identifier}", pathParams = {
+            @OpenApiParam(name = "identifier", description = "Name or UUID of the player")
     }, methods = HttpMethod.GET, tags = {
             "Player" },
 
