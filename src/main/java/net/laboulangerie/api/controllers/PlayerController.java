@@ -46,23 +46,24 @@ public class PlayerController {
         return players;
     }
 
-    @OpenApi(summary = "Get all players", operationId = "getPlayers", path = "/player", methods = HttpMethod.GET, tags = {
+    @OpenApi(description = "Get all players", operationId = "getPlayers", path = "/player", methods = HttpMethod.GET, tags = {
             "Player" }, responses = {
-                    @OpenApiResponse(status = "200", content = {
+                    @OpenApiResponse(status = "200", description = "All players", content = {
                             @OpenApiContent(from = NameUuidModel[].class) })
             })
     public static void getPlayers(Context ctx) {
         ctx.json(getAllPlayers());
     }
 
-    @OpenApi(summary = "Get player with name or UUID", operationId = "getPlayer", path = "/player/{identifier}", pathParams = {
+    @OpenApi(description = "Get player with name or UUID", operationId = "getPlayer", path = "/player/{identifier}", pathParams = {
             @OpenApiParam(name = "identifier", description = "Name or UUID of the player")
     }, methods = HttpMethod.GET, tags = {
             "Player" },
 
             responses = {
-                    @OpenApiResponse(status = "404", content = { @OpenApiContent(from = NotFoundResponse.class) }),
-                    @OpenApiResponse(status = "200", content = {
+                    @OpenApiResponse(status = "404", description = "Player not found", content = {
+                            @OpenApiContent(from = NotFoundResponse.class) }),
+                    @OpenApiResponse(status = "200", description = "Player", content = {
                             @OpenApiContent(from = PlayerModel.class) })
             })
 
@@ -91,58 +92,61 @@ public class PlayerController {
         playerModel.setLastSeen(offlinePlayer.getLastSeen());
 
         Resident resident = TownyAPI.getInstance().getResident(offlinePlayer.getUniqueId());
-        ResidentModel residentModel = new ResidentModel();
 
-        Town town = resident.getTownOrNull();
+        if (resident != null) {
+            ResidentModel residentModel = new ResidentModel();
 
-        if (town != null) {
-            NameUuidModel townModel = new NameUuidModel();
+            Town town = resident.getTownOrNull();
 
-            townModel.setName(town.getName());
-            townModel.setUuid(town.getUUID());
+            if (town != null) {
+                NameUuidModel townModel = new NameUuidModel();
 
-            residentModel.setTown(townModel);
-        }
+                townModel.setName(town.getName());
+                townModel.setUuid(town.getUUID());
 
-        Nation nation = resident.getNationOrNull();
-
-        if (nation != null) {
-            NameUuidModel nationModel = new NameUuidModel();
-
-            nationModel.setName(nation.getName());
-            nationModel.setUuid(nation.getUUID());
-
-            residentModel.setNation(nationModel);
-        }
-
-        List<Resident> friends = resident.getFriends();
-
-        if (!friends.isEmpty()) {
-
-            ArrayList<NameUuidModel> friendsModelList = new ArrayList<>();
-            for (Resident friend : friends) {
-                NameUuidModel friendModel = new NameUuidModel();
-
-                friendModel.setName(friend.getName());
-                friendModel.setUuid(friend.getUUID());
-
-                friendsModelList.add(friendModel);
+                residentModel.setTown(townModel);
             }
 
-            residentModel.setFriends(friendsModelList);
+            Nation nation = resident.getNationOrNull();
+
+            if (nation != null) {
+                NameUuidModel nationModel = new NameUuidModel();
+
+                nationModel.setName(nation.getName());
+                nationModel.setUuid(nation.getUUID());
+
+                residentModel.setNation(nationModel);
+            }
+
+            List<Resident> friends = resident.getFriends();
+
+            if (!friends.isEmpty()) {
+
+                ArrayList<NameUuidModel> friendsModelList = new ArrayList<>();
+                for (Resident friend : friends) {
+                    NameUuidModel friendModel = new NameUuidModel();
+
+                    friendModel.setName(friend.getName());
+                    friendModel.setUuid(friend.getUUID());
+
+                    friendsModelList.add(friendModel);
+                }
+
+                residentModel.setFriends(friendsModelList);
+            }
+
+            residentModel.setIsMayor(resident.isMayor());
+            residentModel.setIsKing(resident.isKing());
+            residentModel.setTownRanks(resident.getTownRanks());
+            residentModel.setNationRanks(resident.getNationRanks());
+            residentModel.setSurname(resident.getSurname());
+            residentModel.setTitle(resident.getTitle());
+            residentModel.setPrefix(resident.getNamePrefix());
+            residentModel.setPostfix(resident.getNamePostfix());
+            residentModel.setFormattedName(resident.getFormattedName());
+
+            playerModel.setResident(residentModel);
         }
-
-        residentModel.setIsMayor(resident.isMayor());
-        residentModel.setIsKing(resident.isKing());
-        residentModel.setTownRanks(resident.getTownRanks());
-        residentModel.setNationRanks(resident.getNationRanks());
-        residentModel.setSurname(resident.getSurname());
-        residentModel.setTitle(resident.getTitle());
-        residentModel.setPrefix(resident.getNamePrefix());
-        residentModel.setPostfix(resident.getNamePostfix());
-        residentModel.setFormattedName(resident.getFormattedName());
-
-        playerModel.setResident(residentModel);
 
         MmoPlayer mmoPlayer = LaBoulangerieMmo.PLUGIN.getMmoPlayerManager()
                 .getOfflinePlayer(offlinePlayer);
