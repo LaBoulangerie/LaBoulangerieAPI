@@ -42,21 +42,23 @@ public class NationController {
         return nationModels;
     }
 
-    @OpenApi(summary = "Get all nations", operationId = "getNations", path = "/nation", methods = HttpMethod.GET, tags = {
+    @OpenApi(description = "Get all nations", operationId = "getNations", path = "/nation", methods = HttpMethod.GET, tags = {
             "Nation" }, responses = {
-                    @OpenApiResponse(status = "200", content = {
+                    @OpenApiResponse(status = "200", description = "All nations", content = {
                             @OpenApiContent(from = NameUuidModel[].class) })
             })
+
     public static void getNations(Context ctx) {
         ctx.json(getAllNations());
     }
 
-    @OpenApi(summary = "Get nation with name or UUID", operationId = "getNation", path = "/nation/{identifier}", pathParams = {
+    @OpenApi(description = "Get nation with name or UUID", operationId = "getNation", path = "/nation/{identifier}", pathParams = {
             @OpenApiParam(name = "identifier", description = "Name or UUID of the nation")
     }, methods = HttpMethod.GET, tags = {
             "Nation" }, responses = {
-                    @OpenApiResponse(status = "404", content = { @OpenApiContent(from = NotFoundResponse.class) }),
-                    @OpenApiResponse(status = "200", content = {
+                    @OpenApiResponse(status = "404", description = "Nation not found", content = {
+                            @OpenApiContent(from = NotFoundResponse.class) }),
+                    @OpenApiResponse(status = "200", description = "Nation", content = {
                             @OpenApiContent(from = NationModel.class) })
             })
 

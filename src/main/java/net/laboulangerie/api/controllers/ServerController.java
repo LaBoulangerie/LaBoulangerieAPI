@@ -17,9 +17,9 @@ import net.laboulangerie.api.models.NameUuidModel;
 import net.laboulangerie.api.models.ServerModel;
 
 public class ServerController {
-    @OpenApi(summary = "Get server informations", operationId = "getServer", path = "/server", methods = HttpMethod.GET, tags = {
+    @OpenApi(description = "Get server informations", operationId = "getServer", path = "/server", methods = HttpMethod.GET, tags = {
             "Server" }, responses = {
-                    @OpenApiResponse(status = "200", content = {
+                    @OpenApiResponse(status = "200", description = "Server informations", content = {
                             @OpenApiContent(from = ServerModel.class) })
             })
 

@@ -26,10 +26,10 @@ public class SearchController {
         return typedNameUuidModel;
     }
 
-    @OpenApi(summary = "Search for player, town or nation by name", operationId = "search", path = "/search/{query}", pathParams = {
+    @OpenApi(description = "Search for player, town or nation by name", operationId = "search", path = "/search/{query}", pathParams = {
             @OpenApiParam(name = "query", description = "Search query") }, methods = HttpMethod.GET, tags = {
                     "Search" }, responses = {
-                            @OpenApiResponse(status = "200", content = {
+                            @OpenApiResponse(status = "200", description = "Query results", content = {
                                     @OpenApiContent(from = NameUuidModel[].class) })
                     })
     public static void search(Context ctx) {
@@ -45,11 +45,11 @@ public class SearchController {
         NationController.getAllNations().forEach((n) -> {
             all.add(typedAs(n, "nation"));
         });
-        ;
+
         TownController.getAllTowns().forEach((t) -> {
             all.add(typedAs(t, "town"));
         });
-        ;
+
         PlayerController.getAllPlayers().forEach((p) -> {
             all.add(typedAs(p, "player"));
         });

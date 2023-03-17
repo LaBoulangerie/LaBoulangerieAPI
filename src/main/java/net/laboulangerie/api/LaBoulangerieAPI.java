@@ -14,7 +14,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import io.javalin.Javalin;
 import io.javalin.json.JsonMapper;
@@ -124,11 +123,6 @@ public class LaBoulangerieAPI extends JavaPlugin {
             ws.onClose(ctx -> {
                 wsList.remove(ctx);
             });
-        });
-
-        app.error(404, ctx -> {
-            String[] pastries = { "🥖", "🥐", "🍞", "🥨", "🧇", "🥯", "🥞" };
-            ctx.result("You seem lost, here get a pastry! " + pastries[new Random().nextInt(pastries.length)]);
         });
 
         Thread.currentThread().setContextClassLoader(classLoader);
