@@ -24,7 +24,7 @@ jobs:
         with:
           servers: |
             [{
-                "id": "laboulangeriemmo",
+                "id": "laboulangerieapi",
                 "username": "${{ secrets.GH_EMAIL }}",
                 "password": "${{ secrets.GH_READ_PACKAGES }}"
             }]
