@@ -20,6 +20,14 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.17
+      - uses: s4u/maven-settings-action@v2.3.0
+        with:
+          servers: |
+            [{
+                "id": "laboulangeriemmo",
+                "username": "${{ secrets.GH_EMAIL }}",
+                "password": "${{ secrets.GH_READ_PACKAGES }}"
+            }]
       - name: Maven build
         run: mvn clean package
       - uses: actions/upload-artifact@v1
@@ -35,11 +43,11 @@ jobs:
           name: laboulangeriecore
       - name: Clone Plugins Project
         run: |
-          git config --global user.email "${{ secrets.GH_EMAIL }}"
-          git config --global user.name "${{ secrets.GH_USER }}"
-          git clone https://${{ secrets.GH_USER }}:${{ secrets.GH_TOKEN }}@git.laboulangerie.net/ci/plugins.git
+          git config --global user.email "ci@laboulangerie.net"
+          git config --global user.name "ci"
+          git clone https://ci:${{ secrets.GH_TOKEN }}@git.laboulangerie.net/ci/plugins.git
           cp LaBoulangerieAPI-jar-with-dependencies.jar plugins/LaBoulangerieAPI.jar
           cd plugins/
           git add .
           git commit -m "workflow $GITHUB_RUN_ID from $GITHUB_REPOSITORY"
-          git push https://${{ secrets.GH_USER }}:${{ secrets.GH_TOKEN }}@git.laboulangerie.net/ci/plugins.git HEAD:master
+          git push https://ci:${{ secrets.GH_TOKEN }}@git.laboulangerie.net/ci/plugins.git HEAD:master
