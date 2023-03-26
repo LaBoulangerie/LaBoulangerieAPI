@@ -22,10 +22,12 @@ import io.javalin.openapi.plugin.OpenApiPlugin;
 import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
 import io.javalin.websocket.WsContext;
+import net.laboulangerie.api.controllers.DonorsController;
 import net.laboulangerie.api.controllers.NationController;
 import net.laboulangerie.api.controllers.PlayerController;
 import net.laboulangerie.api.controllers.SearchController;
 import net.laboulangerie.api.controllers.ServerController;
+import net.laboulangerie.api.controllers.StaffController;
 import net.laboulangerie.api.controllers.TownController;
 import net.laboulangerie.api.listeners.TownyListener;
 
@@ -37,6 +39,7 @@ public class LaBoulangerieAPI extends JavaPlugin {
     @Override
     public void onEnable() {
         LaBoulangerieAPI.PLUGIN = this;
+        this.saveDefaultConfig();
         registerListeners();
         setupJavalin();
         getLogger().info("Enabled Successfully");
@@ -83,12 +86,18 @@ public class LaBoulangerieAPI extends JavaPlugin {
             });
         }
 
-        app.start(8888);
+        app.start(PLUGIN.getConfig().getInt("port"));
         app.get("/", ctx -> ctx.redirect("/swagger"));
 
         app.routes(() -> {
             path("server", () -> {
                 get(ServerController::getServer);
+            });
+            path("staff", () -> {
+                get(StaffController::getStaff);
+            });
+            path("donors", () -> {
+                get(DonorsController::getDonors);
             });
             path("player", () -> {
                 get(PlayerController::getPlayers);
