@@ -14,16 +14,16 @@ import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiResponse;
 import io.javalin.openapi.OpenApiContent;
 import net.laboulangerie.api.LaBoulangerieAPI;
-import net.laboulangerie.api.models.NameUuidModel;
+import net.laboulangerie.api.models.TypedNameUuidModel;
 
 public class DonorsController {
-    public static List<NameUuidModel> getDonorsArray() {
-        List<NameUuidModel> donorsArray = new ArrayList<>();
+    public static List<TypedNameUuidModel> getDonorsArray() {
+        List<TypedNameUuidModel> donorsArray = new ArrayList<>();
 
         try {
             Gson gson = new Gson();
             File donorsFile = new File(LaBoulangerieAPI.PLUGIN.getDataFolder(), "donors.json");
-            NameUuidModel[] donorsList = gson.fromJson(new FileReader(donorsFile), NameUuidModel[].class);
+            TypedNameUuidModel[] donorsList = gson.fromJson(new FileReader(donorsFile), TypedNameUuidModel[].class);
             donorsArray = Arrays.asList(donorsList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -35,7 +35,7 @@ public class DonorsController {
     @OpenApi(description = "Get donors", operationId = "getDonors", path = "/donors", methods = HttpMethod.GET, tags = {
             "Donors" }, responses = {
                     @OpenApiResponse(status = "200", description = "Donors", content = {
-                            @OpenApiContent(from = NameUuidModel[].class) })
+                            @OpenApiContent(from = TypedNameUuidModel[].class) })
             })
     public static void getDonors(Context ctx) {
         ctx.json(getDonorsArray());
