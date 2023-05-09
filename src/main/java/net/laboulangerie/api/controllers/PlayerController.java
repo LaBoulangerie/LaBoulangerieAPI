@@ -89,7 +89,22 @@ public class PlayerController {
         playerModel.setUuid(offlinePlayer.getUniqueId());
         playerModel.setIsOnline(offlinePlayer.isOnline());
         playerModel.setFirstPlayed(offlinePlayer.getFirstPlayed());
-        playerModel.setLastSeen(offlinePlayer.isOnline() ? offlinePlayer.getLastLogin() : offlinePlayer.getLastSeen()); // Sometimes the server's time can be ahead the client making the request, leading to incoherent data
+        playerModel.setLastSeen(offlinePlayer.isOnline() ? offlinePlayer.getLastLogin() : offlinePlayer.getLastSeen()); // Sometimes
+                                                                                                                        // the
+                                                                                                                        // server's
+                                                                                                                        // time
+                                                                                                                        // can
+                                                                                                                        // be
+                                                                                                                        // ahead
+                                                                                                                        // the
+                                                                                                                        // client
+                                                                                                                        // making
+                                                                                                                        // the
+                                                                                                                        // request,
+                                                                                                                        // leading
+                                                                                                                        // to
+                                                                                                                        // incoherent
+                                                                                                                        // data
 
         Resident resident = TownyAPI.getInstance().getResident(offlinePlayer.getUniqueId());
 
@@ -151,29 +166,31 @@ public class PlayerController {
         MmoPlayer mmoPlayer = LaBoulangerieMmo.PLUGIN.getMmoPlayerManager()
                 .getOfflinePlayer(offlinePlayer);
 
-        MmoModel mmoModel = new MmoModel();
+        if (mmoPlayer != null) {
+            MmoModel mmoModel = new MmoModel();
 
-        mmoModel.setPalier(mmoPlayer.getPalier());
+            mmoModel.setPalier(mmoPlayer.getPalier());
 
-        Set<String> talentStrings = LaBoulangerieMmo.talentsRegistry
-                .generateTalentsDataHolder().keySet();
-        List<TalentModel> talentModels = new ArrayList<>();
+            Set<String> talentStrings = LaBoulangerieMmo.talentsRegistry
+                    .generateTalentsDataHolder().keySet();
+            List<TalentModel> talentModels = new ArrayList<>();
 
-        for (String talent : talentStrings) {
-            TalentModel talentModel = new TalentModel();
+            for (String talent : talentStrings) {
+                TalentModel talentModel = new TalentModel();
 
-            talentModel.setName(talent);
-            talentModel.setLevel(mmoPlayer.getTalent(talent).getLevel());
-            talentModel.setXp(mmoPlayer.getTalent(talent).getXp());
-            talentModel.setXpToNextLevel(
-                    mmoPlayer.getTalent(talent).getXpToNextLevel());
-            talentModel.setMinLevelXp(mmoPlayer.getTalent(talent).getLevelXp());
+                talentModel.setName(talent);
+                talentModel.setLevel(mmoPlayer.getTalent(talent).getLevel());
+                talentModel.setXp(mmoPlayer.getTalent(talent).getXp());
+                talentModel.setXpToNextLevel(
+                        mmoPlayer.getTalent(talent).getXpToNextLevel());
+                talentModel.setMinLevelXp(mmoPlayer.getTalent(talent).getLevelXp());
 
-            talentModels.add(talentModel);
+                talentModels.add(talentModel);
+            }
+
+            mmoModel.setTalents(talentModels);
+            playerModel.setMmo(mmoModel);
         }
-
-        mmoModel.setTalents(talentModels);
-        playerModel.setMmo(mmoModel);
 
         ctx.json(playerModel);
     }
