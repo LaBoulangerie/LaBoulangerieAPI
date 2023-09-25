@@ -4,3 +4,12 @@ main: net.laboulangerie.api.LaBoulangerieAPI
 api-version: 1.19
 authors: [PainOchoco]
 depend: [Towny, LaBoulangerieMmo]
+commands:
+    generate:
+        permission: lbapi.generate
+        description: Generate a token to use with the API
+        usage: /generate <username> <level>
+
+permissions:
+    lbapi.generate:
+        default: op

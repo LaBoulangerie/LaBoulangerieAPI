@@ -22,6 +22,7 @@ import io.javalin.openapi.plugin.OpenApiPlugin;
 import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
 import io.javalin.websocket.WsContext;
+import net.laboulangerie.api.commands.GenerateCommand;
 import net.laboulangerie.api.controllers.DonorsController;
 import net.laboulangerie.api.controllers.NationController;
 import net.laboulangerie.api.controllers.PlayerController;
@@ -29,19 +30,28 @@ import net.laboulangerie.api.controllers.SearchController;
 import net.laboulangerie.api.controllers.ServerController;
 import net.laboulangerie.api.controllers.StaffController;
 import net.laboulangerie.api.controllers.TownController;
+import net.laboulangerie.api.jwt.JwtLevel;
+import net.laboulangerie.api.jwt.JwtManager;
 import net.laboulangerie.api.listeners.TownyListener;
 
 public class LaBoulangerieAPI extends JavaPlugin {
     public static LaBoulangerieAPI PLUGIN;
+    public static JwtManager JWT_MANAGER;
     private static Javalin app = null;
     private static final List<WsContext> wsList = new ArrayList<>();
 
     @Override
     public void onEnable() {
         LaBoulangerieAPI.PLUGIN = this;
+        LaBoulangerieAPI.JWT_MANAGER = new JwtManager();
+
         this.saveDefaultConfig();
+
+        getCommand("generate").setExecutor(new GenerateCommand());
         registerListeners();
+
         setupJavalin();
+
         getLogger().info("Enabled Successfully");
     }
 
@@ -83,6 +93,8 @@ public class LaBoulangerieAPI extends JavaPlugin {
                 SwaggerConfiguration swaggerConfiguration = new SwaggerConfiguration();
                 swaggerConfiguration.setUiPath("/swagger");
                 config.plugins.register(new SwaggerPlugin(swaggerConfiguration));
+
+                config.accessManager(JWT_MANAGER.getAccessManager());
             });
         }
 
@@ -95,9 +107,13 @@ public class LaBoulangerieAPI extends JavaPlugin {
             });
             path("staff", () -> {
                 get(StaffController::getStaff);
+                post(StaffController::addStaff, JwtLevel.ADMIN);
+                delete(StaffController::deleteStaff, JwtLevel.ADMIN);
             });
             path("donors", () -> {
                 get(DonorsController::getDonors);
+                post(DonorsController::addDonor, JwtLevel.ADMIN);
+                delete(DonorsController::deleteDonor, JwtLevel.ADMIN);
             });
             path("player", () -> {
                 get(PlayerController::getPlayers);

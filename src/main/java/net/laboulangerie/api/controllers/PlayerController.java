@@ -89,22 +89,9 @@ public class PlayerController {
         playerModel.setUuid(offlinePlayer.getUniqueId());
         playerModel.setIsOnline(offlinePlayer.isOnline());
         playerModel.setFirstPlayed(offlinePlayer.getFirstPlayed());
-        playerModel.setLastSeen(offlinePlayer.isOnline() ? offlinePlayer.getLastLogin() : offlinePlayer.getLastSeen()); // Sometimes
-                                                                                                                        // the
-                                                                                                                        // server's
-                                                                                                                        // time
-                                                                                                                        // can
-                                                                                                                        // be
-                                                                                                                        // ahead
-                                                                                                                        // the
-                                                                                                                        // client
-                                                                                                                        // making
-                                                                                                                        // the
-                                                                                                                        // request,
-                                                                                                                        // leading
-                                                                                                                        // to
-                                                                                                                        // incoherent
-                                                                                                                        // data
+        // Sometimes the server's time can be ahead the client making the request,
+        // leading to incoherent data
+        playerModel.setLastSeen(offlinePlayer.isOnline() ? offlinePlayer.getLastLogin() : offlinePlayer.getLastSeen());
 
         Resident resident = TownyAPI.getInstance().getResident(offlinePlayer.getUniqueId());
 
