@@ -12,8 +12,8 @@ public enum JwtLevel implements RouteRole {
 
     public static Map<String, RouteRole> rolesMapping = new HashMap<>() {
         {
-            put("user", JwtLevel.USER);
-            put("admin", JwtLevel.ADMIN);
+            put("USER", JwtLevel.USER);
+            put("ADMIN", JwtLevel.ADMIN);
         }
     };
 }

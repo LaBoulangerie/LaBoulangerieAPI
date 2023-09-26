@@ -16,12 +16,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.javalin.Javalin;
+import io.javalin.http.Handler;
 import io.javalin.json.JsonMapper;
 import io.javalin.openapi.plugin.OpenApiConfiguration;
 import io.javalin.openapi.plugin.OpenApiPlugin;
 import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
 import io.javalin.websocket.WsContext;
+import javalinjwt.JavalinJWT;
 import net.laboulangerie.api.commands.GenerateCommand;
 import net.laboulangerie.api.controllers.DonorsController;
 import net.laboulangerie.api.controllers.NationController;
@@ -98,44 +100,47 @@ public class LaBoulangerieAPI extends JavaPlugin {
             });
         }
 
+        Handler decodeHandler = JavalinJWT.createHeaderDecodeHandler(JWT_MANAGER.getProvider());
+        app.before(decodeHandler);
+
         app.start(PLUGIN.getConfig().getInt("port"));
         app.get("/", ctx -> ctx.redirect("/swagger"));
 
         app.routes(() -> {
             path("server", () -> {
-                get(ServerController::getServer);
+                get(ServerController::getServer, JwtLevel.ANYONE);
             });
             path("staff", () -> {
-                get(StaffController::getStaff);
+                get(StaffController::getStaff, JwtLevel.ANYONE);
                 post(StaffController::addStaff, JwtLevel.ADMIN);
                 delete(StaffController::deleteStaff, JwtLevel.ADMIN);
             });
             path("donors", () -> {
-                get(DonorsController::getDonors);
+                get(DonorsController::getDonors, JwtLevel.ANYONE);
                 post(DonorsController::addDonor, JwtLevel.ADMIN);
                 delete(DonorsController::deleteDonor, JwtLevel.ADMIN);
             });
             path("player", () -> {
-                get(PlayerController::getPlayers);
+                get(PlayerController::getPlayers, JwtLevel.ANYONE);
                 path("{identifier}", () -> {
-                    get(PlayerController::getPlayer);
+                    get(PlayerController::getPlayer, JwtLevel.ANYONE);
                 });
             });
             path("nation", () -> {
-                get(NationController::getNations);
+                get(NationController::getNations, JwtLevel.ANYONE);
                 path("{identifier}", () -> {
-                    get(NationController::getNation);
+                    get(NationController::getNation, JwtLevel.ANYONE);
                 });
             });
             path("town", () -> {
-                get(TownController::getTowns);
+                get(TownController::getTowns, JwtLevel.ANYONE);
                 path("{identifier}", () -> {
-                    get(TownController::getTown);
+                    get(TownController::getTown, JwtLevel.ANYONE);
                 });
             });
             path("search", () -> {
                 path("{query}", () -> {
-                    get(SearchController::search);
+                    get(SearchController::search, JwtLevel.ANYONE);
                 });
             });
         });

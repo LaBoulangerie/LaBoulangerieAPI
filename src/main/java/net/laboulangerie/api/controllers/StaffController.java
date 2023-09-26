@@ -7,10 +7,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.OptionalInt;
-import java.util.UUID;
 import java.util.stream.IntStream;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.google.gson.Gson;
 
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
@@ -52,26 +52,19 @@ public class StaffController {
         if (decodedJWT == null)
             return;
 
-        String staffUuid = ctx.formParam("uuid");
-        String staffName = ctx.formParam("name");
-        String staffRole = ctx.formParam("role");
+        TypedNameUuidModel newStaff = new Gson().fromJson(ctx.body(), TypedNameUuidModel.class);
 
-        List<TypedNameUuidModel> staffArray = getStaffArray();
+        List<TypedNameUuidModel> staffArray = new ArrayList<>(getStaffArray());
 
-        // Check if donor already exists
+        // Check if staff already exists
         OptionalInt index = IntStream.range(0, staffArray.size())
-                .filter(i -> staffArray.get(i).getUuid().toString().equals(staffUuid))
+                .filter(i -> staffArray.get(i).getUuid().equals(newStaff.getUuid()))
                 .findFirst();
 
         if (index.isPresent()) {
             // Staff already present, deleting and readding with updated values.
             staffArray.remove(index.getAsInt());
         }
-
-        TypedNameUuidModel newStaff = new TypedNameUuidModel();
-        newStaff.setUuid(UUID.fromString(staffUuid));
-        newStaff.setName(staffName);
-        newStaff.setType(staffRole);
 
         staffArray.add(newStaff);
 

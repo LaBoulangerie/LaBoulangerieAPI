@@ -8,10 +8,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.OptionalInt;
-import java.util.UUID;
 import java.util.stream.IntStream;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.google.gson.Gson;
 
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
@@ -53,27 +53,20 @@ public class DonorsController {
         if (decodedJWT == null)
             return;
 
-        String donorUuid = ctx.formParam("uuid");
-        String donorName = ctx.formParam("name");
-        String donorAmount = ctx.formParam("amount");
+        TypedNameUuidModel newDonor = new Gson().fromJson(ctx.body(), TypedNameUuidModel.class);
 
-        List<TypedNameUuidModel> donorsArray = getDonorsArray();
+        List<TypedNameUuidModel> donorsArray = new ArrayList<>(getDonorsArray());
 
         // Check if donor already exists
         OptionalInt index = IntStream.range(0, donorsArray.size())
-                .filter(i -> donorsArray.get(i).getUuid().toString().equals(donorUuid))
+                .filter(i -> donorsArray.get(i).getUuid().equals(newDonor.getUuid()))
                 .findFirst();
 
         if (index.isPresent()) {
             TypedNameUuidModel donor = donorsArray.get(index.getAsInt());
             // Increment the type (donation amount)
-            donor.setType(Integer.toString(Integer.parseInt(donor.getType()) + Integer.parseInt(donorAmount)));
+            donor.setType(Integer.toString(Integer.parseInt(donor.getType()) + Integer.parseInt(newDonor.getType())));
         } else {
-            TypedNameUuidModel newDonor = new TypedNameUuidModel();
-            newDonor.setUuid(UUID.fromString(donorUuid));
-            newDonor.setName(donorName);
-            newDonor.setType(donorAmount);
-
             donorsArray.add(newDonor);
         }
 

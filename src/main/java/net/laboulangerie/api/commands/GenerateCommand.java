@@ -24,14 +24,16 @@ public class GenerateCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String alias,
             @NotNull String[] args) {
 
-        if (args.length != 2)
+        if (args.length != 2) {
+            sender.sendMessage("Invalid usage!");
             return false;
+        }
 
-        String name = args[1];
+        String name = args[0];
         JwtLevel level;
 
         try {
-            level = JwtLevel.valueOf(args[1]);
+            level = JwtLevel.valueOf(args[1].toUpperCase());
         } catch (IllegalArgumentException e) {
             sender.sendMessage("Invalid level!");
             return false;

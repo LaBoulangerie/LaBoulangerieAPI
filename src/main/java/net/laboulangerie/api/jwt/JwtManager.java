@@ -29,14 +29,13 @@ public class JwtManager {
         this.generator = (user, algorithm) -> {
             JWTCreator.Builder token = JWT.create()
                     .withClaim("name", user.getName())
-                    .withClaim("level", user.getLevel().toString());
+                    .withClaim("level", user.getLevel().name());
             return token.sign(algorithm);
         };
 
         this.verifier = JWT.require(algorithm).build();
         this.provider = new JWTProvider<JwtUser>(algorithm, generator, verifier);
         this.accessManager = new JWTAccessManager("level", JwtLevel.rolesMapping, JwtLevel.ANYONE);
-
     }
 
     public Algorithm getAlgorithm() {
@@ -51,6 +50,10 @@ public class JwtManager {
         return verifier;
     }
 
+    public JWTProvider<JwtUser> getProvider() {
+        return provider;
+    }
+
     public JWTAccessManager getAccessManager() {
         return accessManager;
     }
@@ -59,7 +62,7 @@ public class JwtManager {
         Optional<DecodedJWT> decodedJwt = JavalinJWT.getTokenFromHeader(ctx).flatMap(provider::validateToken);
 
         if (!decodedJwt.isPresent()) {
-            ctx.status(401).result("Missing or invalid token");
+            ctx.status(418).result("Missing or invalid token");
             return null;
         }
 
