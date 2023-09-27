@@ -17,6 +17,7 @@ import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiResponse;
 import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiRequestBody;
 import net.laboulangerie.api.LaBoulangerieAPI;
 import net.laboulangerie.api.database.GsonFiles;
 import net.laboulangerie.api.models.TypedNameUuidModel;
@@ -46,7 +47,8 @@ public class StaffController {
     }
 
     @OpenApi(description = "Add staff", operationId = "addStaff", path = "/staff", methods = HttpMethod.POST, tags = {
-            "Staff" })
+            "Staff" }, requestBody = @OpenApiRequestBody(content = {
+                    @OpenApiContent(from = TypedNameUuidModel.class) }))
     public static void addStaff(Context ctx) {
         DecodedJWT decodedJWT = LaBoulangerieAPI.JWT_MANAGER.getJwtFromContext(ctx);
         if (decodedJWT == null)
@@ -83,16 +85,19 @@ public class StaffController {
     }
 
     @OpenApi(description = "Delete staff", operationId = "deleteStaff", path = "/staff", methods = HttpMethod.DELETE, tags = {
-            "Staff", })
+            "Staff" }, requestBody = @OpenApiRequestBody(content = {
+                    @OpenApiContent(from = TypedNameUuidModel.class) }))
     public static void deleteStaff(Context ctx) {
         DecodedJWT decodedJWT = LaBoulangerieAPI.JWT_MANAGER.getJwtFromContext(ctx);
         if (decodedJWT == null)
             return;
 
-        String staffUuid = ctx.formParam("uuid");
-        List<TypedNameUuidModel> staffArray = getStaffArray();
+        TypedNameUuidModel staffToDelete = new Gson().fromJson(ctx.body(), TypedNameUuidModel.class);
+        List<TypedNameUuidModel> staffArray = new ArrayList<>(getStaffArray());
 
-        staffArray.removeIf(d -> d.getUuid().toString() == staffUuid);
+        staffArray.removeIf(
+                d -> (d.getUuid().equals(staffToDelete.getUuid()))
+                        || (d.getName().equals(staffToDelete.getName())));
 
         try {
             GsonFiles.writeArray(staffFile, staffArray);
