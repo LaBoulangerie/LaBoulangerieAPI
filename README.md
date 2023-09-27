@@ -7,6 +7,10 @@ Access public data from Bukkit, Towny, LaBoulangerieMMO and other with ease.
 
 Docs available at http://api.laboulangerie.net.
 
+### 🔑 Tokens
+
+Some of the routes are only accessible with an API key. For now, there are only admin routes requiring API keys but in the future there might be new restricted routes for a selected set of users.
+
 ### 🔌 Websockets
 
 Websockets are not supported by Swagger, this is why there are documented right below.

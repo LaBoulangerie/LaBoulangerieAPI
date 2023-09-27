@@ -47,7 +47,7 @@ public class DonorsController {
     }
 
     @OpenApi(description = "Add donor", operationId = "addDonor", path = "/donors", methods = HttpMethod.POST, tags = {
-            "Donors" })
+            "Donors", "Admin" })
     public static void addDonor(Context ctx) {
         DecodedJWT decodedJWT = LaBoulangerieAPI.JWT_MANAGER.getJwtFromContext(ctx);
         if (decodedJWT == null)
@@ -85,7 +85,7 @@ public class DonorsController {
     }
 
     @OpenApi(description = "Delete donor", operationId = "deleteDonor", path = "/donors", methods = HttpMethod.DELETE, tags = {
-            "Donors" })
+            "Donors", "Admin" })
     public static void deleteDonor(Context ctx) {
         DecodedJWT decodedJWT = LaBoulangerieAPI.JWT_MANAGER.getJwtFromContext(ctx);
         if (decodedJWT == null)
