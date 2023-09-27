@@ -37,7 +37,7 @@ public class StaffController {
     }
 
     @OpenApi(description = "Get staff members", operationId = "getStaff", path = "/staff", methods = HttpMethod.GET, tags = {
-            "Staff", "Admin" }, responses = {
+            "Staff", }, responses = {
                     @OpenApiResponse(status = "200", description = "Staff members", content = {
                             @OpenApiContent(from = TypedNameUuidModel[].class) })
             })
@@ -83,7 +83,7 @@ public class StaffController {
     }
 
     @OpenApi(description = "Delete staff", operationId = "deleteStaff", path = "/staff", methods = HttpMethod.DELETE, tags = {
-            "Staff", "Admin" })
+            "Staff", })
     public static void deleteStaff(Context ctx) {
         DecodedJWT decodedJWT = LaBoulangerieAPI.JWT_MANAGER.getJwtFromContext(ctx);
         if (decodedJWT == null)
