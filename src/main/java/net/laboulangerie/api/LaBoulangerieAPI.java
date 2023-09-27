@@ -22,6 +22,7 @@ import io.javalin.openapi.plugin.OpenApiConfiguration;
 import io.javalin.openapi.plugin.OpenApiPlugin;
 import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
+import io.javalin.security.RouteRole;
 import io.javalin.websocket.WsContext;
 import javalinjwt.JavalinJWT;
 import net.laboulangerie.api.commands.GenerateCommand;
@@ -88,14 +89,17 @@ public class LaBoulangerieAPI extends JavaPlugin {
 
                 config.jsonMapper(gsonMapper);
 
+                RouteRole[] anyone = new RouteRole[] { JwtLevel.ANYONE };
+
                 OpenApiConfiguration openApiConfiguration = new OpenApiConfiguration();
                 openApiConfiguration.getInfo().setTitle("La Boulangerie API");
+                openApiConfiguration.setRoles(anyone);
                 config.plugins.register(new OpenApiPlugin(openApiConfiguration));
 
                 SwaggerConfiguration swaggerConfiguration = new SwaggerConfiguration();
                 swaggerConfiguration.setUiPath("/swagger");
+                swaggerConfiguration.setRoles(anyone);
                 config.plugins.register(new SwaggerPlugin(swaggerConfiguration));
-
                 config.accessManager(JWT_MANAGER.getAccessManager());
             });
         }
@@ -104,7 +108,7 @@ public class LaBoulangerieAPI extends JavaPlugin {
         app.before(decodeHandler);
 
         app.start(PLUGIN.getConfig().getInt("port"));
-        app.get("/", ctx -> ctx.redirect("/swagger"));
+        app.get("/", ctx -> ctx.redirect("/swagger"), JwtLevel.ANYONE);
 
         app.routes(() -> {
             path("server", () -> {
