@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,12 +16,11 @@ jobs:
         with:
           path: ~/.m2
           key: ${{ github.repository }}-build-${{ env.cache-name }}-${{ hashFiles('pom.xml') }}
-      - name: Setup JDK 17
+      - name: JDk 1.17 setup
         uses: actions/setup-java@v1
         with:
           java-version: 1.17
-      - name: Setup maven settings.xml
-        uses: s4u/maven-settings-action@v2.3.0
+      - uses: s4u/maven-settings-action@v2.3.0
         with:
           servers: |
             [{
@@ -47,9 +45,9 @@ jobs:
         run: |
           git config --global user.email "ci@laboulangerie.net"
           git config --global user.name "ci"
-          git clone https://ci:${{ secrets.PAT_TOKEN }}@github.com/PainOchoco/Server.git
+          git clone https://ci:${{ secrets.GH_TOKEN }}@git.laboulangerie.net/ci/plugins.git
           cp LaBoulangerieAPI-jar-with-dependencies.jar plugins/LaBoulangerieAPI.jar
           cd plugins/
           git add .
           git commit -m "workflow $GITHUB_RUN_ID from $GITHUB_REPOSITORY"
-          git push
+          git push https://ci:${{ secrets.GH_TOKEN }}@git.laboulangerie.net/ci/plugins.git HEAD:master
