@@ -24,6 +24,8 @@ import net.laboulangerie.api.models.TypedNameUuidModel;
 
 public class StaffController {
     private static File staffFile = new File(LaBoulangerieAPI.PLUGIN.getDataFolder(), "staff.json");
+    private static List<String> staffHierarchy = Arrays.asList("owner", "mod", "multi", "dev", "builder", "cm",
+            "contributor");
 
     public static List<TypedNameUuidModel> getStaffArray() {
         List<TypedNameUuidModel> staffArray = new ArrayList<>();
@@ -73,7 +75,7 @@ public class StaffController {
         staffArray.sort(new Comparator<TypedNameUuidModel>() {
             @Override
             public int compare(TypedNameUuidModel o1, TypedNameUuidModel o2) {
-                return o1.getType().compareTo(o2.getType());
+                return Integer.compare(staffHierarchy.indexOf(o1.getType()), staffHierarchy.indexOf(o2.getType()));
             }
         });
 
