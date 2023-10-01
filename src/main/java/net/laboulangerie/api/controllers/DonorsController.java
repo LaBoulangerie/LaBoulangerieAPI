@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
@@ -71,13 +70,6 @@ public class DonorsController {
         } else {
             donorsArray.add(newDonor);
         }
-
-        donorsArray.sort(new Comparator<TypedNameUuidModel>() {
-            @Override
-            public int compare(TypedNameUuidModel o1, TypedNameUuidModel o2) {
-                return Integer.compare(Integer.parseInt(o1.getType()), Integer.parseInt(o2.getType()));
-            }
-        });
 
         try {
             GsonFiles.writeArray(donorsFile, donorsArray);
