@@ -1,53 +1,54 @@
 name: LaBoulangerieAPI continuous delivery
 
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Cache m2 repository
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-m2-repository
-        with:
-          path: ~/.m2
-          key: ${{ github.repository }}-build-${{ env.cache-name }}-${{ hashFiles('pom.xml') }}
-      - name: JDk 1.17 setup
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.17
-      - uses: s4u/maven-settings-action@v2.3.0
-        with:
-          servers: |
-            [{
-                "id": "laboulangeriemmo",
-                "username": "${{ secrets.GH_EMAIL }}",
-                "password": "${{ secrets.GH_READ_PACKAGES }}"
-            }]
-      - name: Maven build
-        run: mvn clean package
-      - uses: actions/upload-artifact@v1
-        with:
-          name: laboulangeriecore
-          path: target
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: laboulangeriecore
-      - name: Clone Plugins Project
-        run: |
-          git config --global user.email "ci@laboulangerie.net"
-          git config --global user.name "ci"
-          git clone https://ci:${{ secrets.GH_TOKEN }}@git.laboulangerie.net/ci/plugins.git
-          cp LaBoulangerieAPI-jar-with-dependencies.jar plugins/LaBoulangerieAPI.jar
-          cd plugins/
-          git add .
-          git commit -m "workflow $GITHUB_RUN_ID from $GITHUB_REPOSITORY"
-          git push https://ci:${{ secrets.GH_TOKEN }}@git.laboulangerie.net/ci/plugins.git HEAD:master
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Cache m2 repository
+              uses: actions/cache@v2
+              env:
+                  cache-name: cache-m2-repository
+              with:
+                  path: ~/.m2
+                  key: ${{ github.repository }}-build-${{ env.cache-name }}-${{ hashFiles('pom.xml') }}
+            - name: JDk 1.17 setup
+              uses: actions/setup-java@v1
+              with:
+                  java-version: 1.17
+            - uses: s4u/maven-settings-action@v2.3.0
+              with:
+                  servers: |
+                      [{
+                          "id": "laboulangeriemmo",
+                          "username": "${{ secrets.GH_EMAIL }}",
+                          "password": "${{ secrets.GH_READ_PACKAGES }}"
+                      }]
+            - name: Maven build
+              run: mvn clean package
+            - uses: actions/upload-artifact@v1
+              with:
+                  name: laboulangerieapi
+                  path: target
+    deploy:
+        runs-on: ubuntu-latest
+        needs: [build]
+        steps:
+            - uses: actions/download-artifact@v2
+              with:
+                  name: laboulangerieapi
+            - name: Clone Plugins Project
+              run: |
+                  git config --global user.name "octocroissant[bot]"
+                  git config --global user.email 149737708+octocroissant[bot]@users.noreply.github.com
+                  git config --global --add safe.directory "$GITHUB_WORKSPACE"
+                  git clone https://octocroissant[bot]:${{ secrets.PAT_TOKEN }}@github.com/LaBoulangerie/Server.git
+                  cp [!original-]**.jar Server/plugins/LaBoulangerieAPI.jar
+                  cd Server
+                  git add .
+                  git commit -m "Update artifact from $GITHUB_REPOSITORY"
+                  git push
