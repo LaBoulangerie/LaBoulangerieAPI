@@ -80,12 +80,12 @@
             <url>https://repo.glaremasters.me/repository/towny/</url>
         </repository>
         <repository>
-            <id>laboulangeriemmo</id>
-            <url>https://maven.pkg.github.com/laboulangerie/laboulangeriemmo</url>
-        </repository>
-        <repository>
             <id>reposilite-repository</id>
             <url>https://maven.reposilite.com/snapshots</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -103,9 +103,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.laboulangerie</groupId>
-            <artifactId>laboulangeriemmo</artifactId>
-            <version>2.2.1</version>
+            <groupId>com.github.LaBoulangerie</groupId>
+            <artifactId>LaBoulangerieMMO</artifactId>
+            <version>2.3.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
