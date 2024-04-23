@@ -33,6 +33,7 @@ import net.laboulangerie.api.controllers.SearchController;
 import net.laboulangerie.api.controllers.ServerController;
 import net.laboulangerie.api.controllers.StaffController;
 import net.laboulangerie.api.controllers.TownController;
+import net.laboulangerie.api.controllers.VoteController;
 import net.laboulangerie.api.jwt.JwtLevel;
 import net.laboulangerie.api.jwt.JwtManager;
 import net.laboulangerie.api.listeners.TownyListener;
@@ -146,6 +147,9 @@ public class LaBoulangerieAPI extends JavaPlugin {
                 path("{query}", () -> {
                     get(SearchController::search, JwtLevel.ANYONE);
                 });
+            });
+            path("vote", () -> {
+                get(VoteController::getVotes, JwtLevel.ANYONE);
             });
         });
 
