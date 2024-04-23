@@ -1,9 +1,9 @@
 name: LaBoulangerieAPI
 version: 1.0-SNAPSHOT
 main: net.laboulangerie.api.LaBoulangerieAPI
-api-version: 1.19
+api-version: 1.20
 authors: [PainOchoco]
-depend: [Towny, LaBoulangerieMmo]
+depend: [Towny, LaBoulangerieMmo, VotingPlugin]
 commands:
     generate:
         permission: lbapi.generate
