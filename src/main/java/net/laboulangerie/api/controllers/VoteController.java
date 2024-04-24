@@ -14,7 +14,7 @@ import io.javalin.openapi.OpenApiContent;
 public class VoteController {
     public static List<String> getVotes() {
         List<VoteSite> sites = VotingPluginMain.getPlugin().getVoteSites();
-        List<String> urls = sites.stream().filter(VoteSite::isEnabled).map(VoteSite::getVoteURL)
+        List<String> urls = sites.stream().filter(VoteSite::isEnabled).map((site) -> site.getVoteURL(false))
                 .collect(Collectors.toList());
         return urls;
     }
