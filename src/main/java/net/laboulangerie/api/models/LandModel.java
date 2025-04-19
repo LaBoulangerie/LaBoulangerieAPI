@@ -16,11 +16,11 @@ public class LandModel implements Serializable {
     private String levelName = null;
     private int balance = 0;
     private String color = null;
-    private List<NameIdModel<UUID>> residents = Collections.emptyList();
+    private List<NameIdModel<UUID>> residents = new ArrayList<>();
     private CoordinatesModel spawn = null;
-    private List<CoordinatesModel> chunksCoordinates = Collections.emptyList();
-    private List<NameIdModel<ULID>> enemies = Collections.emptyList();
-    private List<NameIdModel<ULID>> allies = Collections.emptyList();
+    private List<CoordinatesModel> chunksCoordinates = new ArrayList<>();
+    private List<NameIdModel<ULID>> enemies = new ArrayList<>();
+    private List<NameIdModel<ULID>> allies = new ArrayList<>();
 
     public String getName() {
         return name;
