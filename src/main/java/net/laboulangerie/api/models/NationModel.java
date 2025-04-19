@@ -15,9 +15,9 @@ public class NationModel implements Serializable {
     private NameIdModel<ULID> capital = null;
     private int balance = 0;
     private String color = null;
-    private List<NameIdModel<ULID>> lands = Collections.emptyList();
-    private List<NameIdModel<ULID>> enemies = Collections.emptyList();
-    private List<NameIdModel<ULID>> allies = Collections.emptyList();
+    private List<NameIdModel<ULID>> lands = new ArrayList<>();
+    private List<NameIdModel<ULID>> enemies = new ArrayList<>();
+    private List<NameIdModel<ULID>> allies = new ArrayList<>();
 
     public String getName() {
         return name;
