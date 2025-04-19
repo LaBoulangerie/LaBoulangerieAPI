@@ -4,24 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-
-import com.palmergames.bukkit.towny.TownyAPI;
-import com.palmergames.bukkit.towny.object.Nation;
-import com.palmergames.bukkit.towny.object.Resident;
-import com.palmergames.bukkit.towny.object.Town;
 
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiResponse;
+import me.angeschossen.lands.api.applicationframework.util.ULID;
+import me.angeschossen.lands.api.land.Land;
+import me.angeschossen.lands.api.nation.Nation;
 import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
+import net.laboulangerie.api.LaBoulangerieAPI;
 import net.laboulangerie.api.models.MmoModel;
-import net.laboulangerie.api.models.NameUuidModel;
+import net.laboulangerie.api.models.NameIdModel;
 import net.laboulangerie.api.models.PlayerModel;
 import net.laboulangerie.api.models.ResidentModel;
 import net.laboulangerie.api.models.TalentModel;
@@ -30,16 +30,13 @@ import net.laboulangerie.laboulangeriemmo.api.player.MmoPlayer;
 
 public class PlayerController {
 
-    public static List<NameUuidModel> getAllPlayers() {
-        ArrayList<NameUuidModel> players = new ArrayList<>();
+    public static List<NameIdModel<UUID>> getAllPlayers() {
+        ArrayList<NameIdModel<UUID>> players = new ArrayList<>();
         OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
 
         for (OfflinePlayer offlinePlayer : offlinePlayers) {
-            NameUuidModel model = new NameUuidModel();
-
-            model.setName(offlinePlayer.getName());
-            model.setUuid(offlinePlayer.getUniqueId());
-
+            NameIdModel<UUID> model = new NameIdModel<UUID>(offlinePlayer.getName(),
+                    offlinePlayer.getUniqueId());
             players.add(model);
         }
 
@@ -49,7 +46,7 @@ public class PlayerController {
     @OpenApi(description = "Get all players", operationId = "getPlayers", path = "/player", methods = HttpMethod.GET, tags = {
             "Player" }, responses = {
                     @OpenApiResponse(status = "200", description = "All players", content = {
-                            @OpenApiContent(from = NameUuidModel[].class) })
+                            @OpenApiContent(from = NameIdModel[].class) })
             })
     public static void getPlayers(Context ctx) {
         ctx.json(getAllPlayers());
@@ -93,60 +90,39 @@ public class PlayerController {
         // leading to incoherent data
         playerModel.setLastSeen(offlinePlayer.isOnline() ? offlinePlayer.getLastLogin() : offlinePlayer.getLastSeen());
 
-        Resident resident = TownyAPI.getInstance().getResident(offlinePlayer.getUniqueId());
+        me.angeschossen.lands.api.player.OfflinePlayer resident = null;
+        try {
+            resident = LaBoulangerieAPI.LANDS_INTEGRATION
+                    .getOfflineLandPlayer(offlinePlayer.getUniqueId()).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Failed to retrieve the resident information", e);
+        }
 
         if (resident != null) {
             ResidentModel residentModel = new ResidentModel();
 
-            Town town = resident.getTownOrNull();
+            // In Gaiartos, the player can only be in one land
+            Land land = resident.getLands().iterator().hasNext() ? resident.getLands().iterator().next() : null;
 
-            if (town != null) {
-                NameUuidModel townModel = new NameUuidModel();
+            if (land != null) {
+                NameIdModel<ULID> townModel = new NameIdModel<ULID>(
+                        land.getName(),
+                        land.getULID());
+                residentModel.setLand(townModel);
+                residentModel.setIsMayor(land.getOwnerUID().equals(offlinePlayer.getUniqueId()));
 
-                townModel.setName(town.getName());
-                townModel.setUuid(town.getUUID());
+                Nation nation = land.getNation();
 
-                residentModel.setTown(townModel);
-            }
-
-            Nation nation = resident.getNationOrNull();
-
-            if (nation != null) {
-                NameUuidModel nationModel = new NameUuidModel();
-
-                nationModel.setName(nation.getName());
-                nationModel.setUuid(nation.getUUID());
-
-                residentModel.setNation(nationModel);
-            }
-
-            List<Resident> friends = resident.getFriends();
-
-            if (!friends.isEmpty()) {
-
-                ArrayList<NameUuidModel> friendsModelList = new ArrayList<>();
-                for (Resident friend : friends) {
-                    NameUuidModel friendModel = new NameUuidModel();
-
-                    friendModel.setName(friend.getName());
-                    friendModel.setUuid(friend.getUUID());
-
-                    friendsModelList.add(friendModel);
+                if (nation != null) {
+                    NameIdModel<ULID> nationModel = new NameIdModel<ULID>(
+                            nation.getName(),
+                            nation.getULID());
+                    residentModel.setNation(nationModel);
+                    residentModel.setIsKing(nation.getOwnerUID().equals(offlinePlayer.getUniqueId()));
                 }
-
-                residentModel.setFriends(friendsModelList);
             }
 
-            residentModel.setIsMayor(resident.isMayor());
-            residentModel.setIsKing(resident.isKing());
-            residentModel.setTownRanks(resident.getTownRanks());
-            residentModel.setNationRanks(resident.getNationRanks());
-            residentModel.setSurname(resident.getSurname());
-            residentModel.setTitle(resident.getTitle());
-            residentModel.setPrefix(resident.getNamePrefix());
-            residentModel.setPostfix(resident.getNamePostfix());
-            residentModel.setFormattedName(resident.getFormattedName());
-
+            residentModel.setRoleName(land.getDefaultArea().getRole(offlinePlayer.getUniqueId()).getName());
             playerModel.setResident(residentModel);
         }
 

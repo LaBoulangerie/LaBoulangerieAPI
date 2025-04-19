@@ -5,25 +5,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import me.angeschossen.lands.api.applicationframework.util.ULID;
+
 public class NationModel implements Serializable {
     private String name = null;
-    private UUID uuid = null;
-    private NameUuidModel king = null;
-    private NameUuidModel capital = null;
-    private String board = null;
-    private String tag = null;
-    private String formattedName = null;
-    private long registered = 0;
+    private ULID ulid = null;
+
+    private NameIdModel<UUID> king = null;
+    private NameIdModel<ULID> capital = null;
     private int balance = 0;
-    private String mapColor = null;
-    private List<NameUuidModel> towns = Collections.emptyList();
-    private List<NameUuidModel> residents = Collections.emptyList();
-    private List<NameUuidModel> enemies = Collections.emptyList();
-    private List<NameUuidModel> allies = Collections.emptyList();
-    private CoordinatesModel spawn;
-    private Boolean isNeutral = null;
-    private Boolean isOpen = null;
-    private Boolean isPublic = null;
+    private String color = null;
+    private List<NameIdModel<ULID>> lands = Collections.emptyList();
+    private List<NameIdModel<ULID>> enemies = Collections.emptyList();
+    private List<NameIdModel<ULID>> allies = Collections.emptyList();
 
     public String getName() {
         return name;
@@ -33,60 +27,28 @@ public class NationModel implements Serializable {
         this.name = name;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public ULID getUlid() {
+        return ulid;
     }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+    public void setUlid(ULID ulid) {
+        this.ulid = ulid;
     }
 
-    public NameUuidModel getKing() {
+    public NameIdModel<UUID> getKing() {
         return king;
     }
 
-    public void setKing(NameUuidModel king) {
+    public void setKing(NameIdModel<UUID> king) {
         this.king = king;
     }
 
-    public NameUuidModel getCapital() {
+    public NameIdModel<ULID> getCapital() {
         return capital;
     }
 
-    public void setCapital(NameUuidModel capital) {
+    public void setCapital(NameIdModel<ULID> capital) {
         this.capital = capital;
-    }
-
-    public String getBoard() {
-        return board;
-    }
-
-    public void setBoard(String board) {
-        this.board = board;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public String getFormattedName() {
-        return formattedName;
-    }
-
-    public void setFormattedName(String formattedName) {
-        this.formattedName = formattedName;
-    }
-
-    public long getRegistered() {
-        return registered;
-    }
-
-    public void setRegistered(long registered) {
-        this.registered = registered;
     }
 
     public int getBalance() {
@@ -97,75 +59,36 @@ public class NationModel implements Serializable {
         this.balance = balance;
     }
 
-    public String getMapColor() {
-        return mapColor;
+    public String getColor() {
+        return color;
     }
 
-    public void setMapColor(String mapColor) {
-        this.mapColor = mapColor;
+    public void setColor(String color) {
+        this.color = color;
     }
 
-    public List<NameUuidModel> getTowns() {
-        return towns;
+    public List<NameIdModel<ULID>> getLands() {
+        return lands;
     }
 
-    public void setTowns(List<NameUuidModel> towns) {
-        this.towns = towns;
+    public void setLands(List<NameIdModel<ULID>> lands) {
+        this.lands = lands;
     }
 
-    public List<NameUuidModel> getResidents() {
-        return residents;
-    }
-
-    public void setResidents(List<NameUuidModel> residents) {
-        this.residents = residents;
-    }
-
-    public List<NameUuidModel> getEnemies() {
+    public List<NameIdModel<ULID>> getEnemies() {
         return enemies;
     }
 
-    public void setEnemies(List<NameUuidModel> enemies) {
+    public void setEnemies(List<NameIdModel<ULID>> enemies) {
         this.enemies = enemies;
     }
 
-    public List<NameUuidModel> getAllies() {
+    public List<NameIdModel<ULID>> getAllies() {
         return allies;
     }
 
-    public void setAllies(List<NameUuidModel> allies) {
+    public void setAllies(List<NameIdModel<ULID>> allies) {
         this.allies = allies;
     }
 
-    public CoordinatesModel getSpawn() {
-        return spawn;
-    }
-
-    public void setSpawn(CoordinatesModel spawn) {
-        this.spawn = spawn;
-    }
-
-    public Boolean getIsNeutral() {
-        return isNeutral;
-    }
-
-    public void setIsNeutral(Boolean isNeutral) {
-        this.isNeutral = isNeutral;
-    }
-
-    public Boolean getIsOpen() {
-        return isOpen;
-    }
-
-    public void setIsOpen(Boolean isOpen) {
-        this.isOpen = isOpen;
-    }
-
-    public Boolean getIsPublic() {
-        return isPublic;
-    }
-
-    public void setIsPublic(Boolean isPublic) {
-        this.isPublic = isPublic;
-    }
 }

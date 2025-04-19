@@ -1,45 +1,31 @@
 package net.laboulangerie.api.models;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
+
+import me.angeschossen.lands.api.applicationframework.util.ULID;
 
 public class ResidentModel implements Serializable {
-    private NameUuidModel town = null;
-    private NameUuidModel nation = null;
-    private List<NameUuidModel> friends = Collections.emptyList();
+    private NameIdModel<ULID> land = null;
+    private NameIdModel<ULID> nation = null;
     private Boolean isMayor = false;
     private Boolean isKing = false;
-    private List<String> townRanks = Collections.emptyList();
-    private List<String> nationRanks = Collections.emptyList();
-    private String surname = null;
-    private String title = null;
-    private String prefix = null;
-    private String postfix = null;
-    private String formattedName = null;
+    private String roleName = null;
+    private int balance = 0;
 
-    public NameUuidModel getTown() {
-        return town;
+    public NameIdModel<ULID> getLand() {
+        return land;
     }
 
-    public void setTown(NameUuidModel town) {
-        this.town = town;
+    public void setLand(NameIdModel<ULID> land) {
+        this.land = land;
     }
 
-    public NameUuidModel getNation() {
+    public NameIdModel<ULID> getNation() {
         return nation;
     }
 
-    public void setNation(NameUuidModel nation) {
+    public void setNation(NameIdModel<ULID> nation) {
         this.nation = nation;
-    }
-
-    public List<NameUuidModel> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(List<NameUuidModel> friends) {
-        this.friends = friends;
     }
 
     public Boolean getIsMayor() {
@@ -58,59 +44,19 @@ public class ResidentModel implements Serializable {
         this.isKing = isKing;
     }
 
-    public List<String> getTownRanks() {
-        return townRanks;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setTownRanks(List<String> townRanks) {
-        this.townRanks = townRanks;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
-    public List<String> getNationRanks() {
-        return nationRanks;
+    public int getBalance() {
+        return balance;
     }
 
-    public void setNationRanks(List<String> nationRanks) {
-        this.nationRanks = nationRanks;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    public String getPostfix() {
-        return postfix;
-    }
-
-    public void setPostfix(String postfix) {
-        this.postfix = postfix;
-    }
-
-    public String getFormattedName() {
-        return formattedName;
-    }
-
-    public void setFormattedName(String formattedName) {
-        this.formattedName = formattedName;
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
 }

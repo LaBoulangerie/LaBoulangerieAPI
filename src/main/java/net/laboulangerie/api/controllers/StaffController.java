@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -20,15 +21,15 @@ import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiRequestBody;
 import net.laboulangerie.api.LaBoulangerieAPI;
 import net.laboulangerie.api.database.GsonFiles;
-import net.laboulangerie.api.models.TypedNameUuidModel;
+import net.laboulangerie.api.models.TypedNameIdModel;
 
 public class StaffController {
     private static File staffFile = new File(LaBoulangerieAPI.PLUGIN.getDataFolder(), "staff.json");
     private static List<String> staffHierarchy = Arrays.asList("owner", "mod", "multi", "dev", "builder", "cm",
             "contributor");
 
-    public static List<TypedNameUuidModel> getStaffArray() {
-        List<TypedNameUuidModel> staffArray = new ArrayList<>();
+    public static List<TypedNameIdModel<UUID>> getStaffArray() {
+        List<TypedNameIdModel<UUID>> staffArray = new ArrayList<>();
 
         try {
             staffArray = Arrays.asList(GsonFiles.readArray(staffFile));
@@ -42,7 +43,7 @@ public class StaffController {
     @OpenApi(description = "Get staff members", operationId = "getStaff", path = "/staff", methods = HttpMethod.GET, tags = {
             "Staff", }, responses = {
                     @OpenApiResponse(status = "200", description = "Staff members", content = {
-                            @OpenApiContent(from = TypedNameUuidModel[].class) })
+                            @OpenApiContent(from = TypedNameIdModel[].class) })
             })
     public static void getStaff(Context ctx) {
         ctx.json(getStaffArray());
@@ -50,19 +51,20 @@ public class StaffController {
 
     @OpenApi(description = "Add staff", operationId = "addStaff", path = "/staff", methods = HttpMethod.POST, tags = {
             "Staff" }, requestBody = @OpenApiRequestBody(content = {
-                    @OpenApiContent(from = TypedNameUuidModel.class) }))
+                    @OpenApiContent(from = TypedNameIdModel.class) }))
     public static void addStaff(Context ctx) {
         DecodedJWT decodedJWT = LaBoulangerieAPI.JWT_MANAGER.getJwtFromContext(ctx);
         if (decodedJWT == null)
             return;
 
-        TypedNameUuidModel newStaff = new Gson().fromJson(ctx.body(), TypedNameUuidModel.class);
-
-        List<TypedNameUuidModel> staffArray = new ArrayList<>(getStaffArray());
+        TypedNameIdModel<UUID> newStaff = new Gson().fromJson(ctx.body(),
+                new com.google.gson.reflect.TypeToken<TypedNameIdModel<UUID>>() {
+                }.getType());
+        List<TypedNameIdModel<UUID>> staffArray = new ArrayList<>(getStaffArray());
 
         // Check if staff already exists
         OptionalInt index = IntStream.range(0, staffArray.size())
-                .filter(i -> staffArray.get(i).getUuid().equals(newStaff.getUuid()))
+                .filter(i -> staffArray.get(i).getId().equals(newStaff.getId()))
                 .findFirst();
 
         if (index.isPresent()) {
@@ -72,9 +74,9 @@ public class StaffController {
 
         staffArray.add(newStaff);
 
-        staffArray.sort(new Comparator<TypedNameUuidModel>() {
+        staffArray.sort(new Comparator<TypedNameIdModel<UUID>>() {
             @Override
-            public int compare(TypedNameUuidModel o1, TypedNameUuidModel o2) {
+            public int compare(TypedNameIdModel<UUID> o1, TypedNameIdModel<UUID> o2) {
                 return Integer.compare(staffHierarchy.indexOf(o1.getType()), staffHierarchy.indexOf(o2.getType()));
             }
         });
@@ -88,17 +90,19 @@ public class StaffController {
 
     @OpenApi(description = "Delete staff", operationId = "deleteStaff", path = "/staff", methods = HttpMethod.DELETE, tags = {
             "Staff" }, requestBody = @OpenApiRequestBody(content = {
-                    @OpenApiContent(from = TypedNameUuidModel.class) }))
+                    @OpenApiContent(from = TypedNameIdModel.class) }))
     public static void deleteStaff(Context ctx) {
         DecodedJWT decodedJWT = LaBoulangerieAPI.JWT_MANAGER.getJwtFromContext(ctx);
         if (decodedJWT == null)
             return;
 
-        TypedNameUuidModel staffToDelete = new Gson().fromJson(ctx.body(), TypedNameUuidModel.class);
-        List<TypedNameUuidModel> staffArray = new ArrayList<>(getStaffArray());
+        TypedNameIdModel<UUID> staffToDelete = new Gson().fromJson(ctx.body(),
+                new com.google.gson.reflect.TypeToken<TypedNameIdModel<UUID>>() {
+                }.getType());
+        List<TypedNameIdModel<UUID>> staffArray = new ArrayList<>(getStaffArray());
 
         staffArray.removeIf(
-                d -> (d.getUuid().equals(staffToDelete.getUuid()))
+                d -> (d.getId().equals(staffToDelete.getId()))
                         || (d.getName().equals(staffToDelete.getName())));
 
         try {

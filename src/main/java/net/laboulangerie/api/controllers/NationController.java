@@ -1,40 +1,36 @@
 package net.laboulangerie.api.controllers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.bukkit.Location;
-
-import com.palmergames.bukkit.towny.TownyUniverse;
-import com.palmergames.bukkit.towny.exceptions.TownyException;
-import com.palmergames.bukkit.towny.object.Nation;
-import com.palmergames.bukkit.towny.object.Resident;
-import com.palmergames.bukkit.towny.object.Town;
+import java.util.concurrent.ExecutionException;
 
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiResponse;
+import me.angeschossen.lands.api.applicationframework.util.ULID;
+import me.angeschossen.lands.api.land.Land;
+import me.angeschossen.lands.api.nation.Nation;
+import me.angeschossen.lands.api.player.OfflinePlayer;
 import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
-import net.laboulangerie.api.models.CoordinatesModel;
-import net.laboulangerie.api.models.NameUuidModel;
+import net.laboulangerie.api.LaBoulangerieAPI;
+import net.laboulangerie.api.models.NameIdModel;
 import net.laboulangerie.api.models.NationModel;
 
 public class NationController {
 
-    public static List<NameUuidModel> getAllNations() {
-        ArrayList<NameUuidModel> nationModels = new ArrayList<>();
-        List<Nation> nations = TownyUniverse.getInstance().getNations().stream().collect(Collectors.toList());
+    public static List<NameIdModel<ULID>> getAllNations() {
+        ArrayList<NameIdModel<ULID>> nationModels = new ArrayList<>();
+        Collection<Nation> nations = LaBoulangerieAPI.LANDS_INTEGRATION.getNations();
 
         for (Nation nation : nations) {
-            NameUuidModel model = new NameUuidModel();
-
-            model.setName(nation.getName());
-            model.setUuid(nation.getUUID());
+            NameIdModel<ULID> model = new NameIdModel<ULID>(
+                    nation.getName(),
+                    nation.getULID());
 
             nationModels.add(model);
         }
@@ -45,7 +41,7 @@ public class NationController {
     @OpenApi(description = "Get all nations", operationId = "getNations", path = "/nation", methods = HttpMethod.GET, tags = {
             "Nation" }, responses = {
                     @OpenApiResponse(status = "200", description = "All nations", content = {
-                            @OpenApiContent(from = NameUuidModel[].class) })
+                            @OpenApiContent(from = NameIdModel[].class) })
             })
 
     public static void getNations(Context ctx) {
@@ -67,10 +63,10 @@ public class NationController {
         Nation nation;
 
         try {
-            UUID uuid = UUID.fromString(identifier);
-            nation = TownyUniverse.getInstance().getNation(uuid);
+            ULID ulid = ULID.fromString(identifier);
+            nation = LaBoulangerieAPI.LANDS_INTEGRATION.getNationByULID(ulid);
         } catch (Exception ignored) {
-            nation = TownyUniverse.getInstance().getNation(identifier);
+            nation = LaBoulangerieAPI.LANDS_INTEGRATION.getNationByName(identifier);
         }
 
         if (nation == null) {
@@ -80,104 +76,49 @@ public class NationController {
         NationModel nationModel = new NationModel();
 
         nationModel.setName(nation.getName());
-        nationModel.setUuid(nation.getUUID());
+        nationModel.setUlid(nation.getULID());
 
-        Resident king = nation.getKing();
-        NameUuidModel kingModel = new NameUuidModel();
+        OfflinePlayer king;
+        try {
+            king = LaBoulangerieAPI.LANDS_INTEGRATION.getOfflineLandPlayer(nation.getOwnerUID()).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Failed to retrieve the mayor information", e);
+        }
 
-        kingModel.setName(king.getName());
-        kingModel.setUuid(king.getUUID());
+        NameIdModel<UUID> kingModel = new NameIdModel<UUID>(
+                king.getName(),
+                king.getUID());
         nationModel.setKing(kingModel);
 
-        Town capital = nation.getCapital();
-        NameUuidModel capitalModel = new NameUuidModel();
-
-        capitalModel.setName(capital.getName());
-        capitalModel.setUuid(capital.getUUID());
-
+        Land capital = nation.getCapital();
+        NameIdModel<ULID> capitalModel = new NameIdModel<ULID>(
+                capital.getName(),
+                capital.getULID());
         nationModel.setCapital(capitalModel);
 
-        nationModel.setBoard(nation.getBoard());
-        nationModel.setTag(nation.getTag());
-        nationModel.setFormattedName(nation.getFormattedName());
-        nationModel.setRegistered(nation.getRegistered());
-        nationModel.setBalance((int) nation.getAccount().getHoldingBalance());
-        nationModel.setMapColor(nation.getMapColorHexCode());
+        nationModel.setBalance((int) nation.getBalance());
+        nationModel.setColor(nation.getColorName());
 
-        List<Town> towns = nation.getTowns();
-        List<NameUuidModel> townModels = new ArrayList<>();
+        nation.getLands().forEach(land -> {
+            NameIdModel<ULID> landModel = new NameIdModel<ULID>(
+                    land.getName(),
+                    land.getULID());
+            nationModel.getLands().add(landModel);
+        });
 
-        for (Town town : towns) {
-            NameUuidModel townModel = new NameUuidModel();
+        nation.getAllies().forEach(ally -> {
+            NameIdModel<ULID> allyModel = new NameIdModel<ULID>(
+                    ally.getName(),
+                    ally.getULID());
+            nationModel.getAllies().add(allyModel);
+        });
 
-            townModel.setName(town.getName());
-            townModel.setUuid(town.getUUID());
-
-            townModels.add(townModel);
-        }
-
-        nationModel.setTowns(townModels);
-
-        List<Resident> residents = nation.getResidents();
-        List<NameUuidModel> residentModels = new ArrayList<>();
-
-        for (Resident resident : residents) {
-            NameUuidModel residentModel = new NameUuidModel();
-
-            residentModel.setName(resident.getName());
-            residentModel.setUuid(resident.getUUID());
-
-            residentModels.add(residentModel);
-        }
-
-        nationModel.setResidents(residentModels);
-
-        List<Nation> enemies = nation.getEnemies();
-        List<NameUuidModel> enemyModels = new ArrayList<>();
-
-        for (Nation enemy : enemies) {
-            NameUuidModel enemyModel = new NameUuidModel();
-
-            enemyModel.setName(enemy.getName());
-            enemyModel.setUuid(enemy.getUUID());
-
-            enemyModels.add(enemyModel);
-        }
-
-        nationModel.setEnemies(enemyModels);
-
-        List<Nation> allies = nation.getAllies();
-        List<NameUuidModel> allyModels = new ArrayList<>();
-
-        for (Nation ally : allies) {
-            NameUuidModel allyModel = new NameUuidModel();
-
-            allyModel.setName(ally.getName());
-            allyModel.setUuid(ally.getUUID());
-
-            allyModels.add(allyModel);
-        }
-
-        nationModel.setAllies(allyModels);
-
-        Location spawn;
-
-        try {
-            spawn = nation.getSpawn();
-            CoordinatesModel spawnModel = new CoordinatesModel();
-            spawnModel.setX(spawn.getX());
-            spawnModel.setY(spawn.getY());
-            spawnModel.setZ(spawn.getZ());
-            spawnModel.setWorld(spawn.getWorld().getName());
-            spawnModel.setType("spawn");
-
-            nationModel.setSpawn(spawnModel);
-        } catch (TownyException ignored) {
-        }
-
-        nationModel.setIsNeutral(nation.isNeutral());
-        nationModel.setIsOpen(nation.isOpen());
-        nationModel.setIsPublic(nation.isPublic());
+        nation.getEnemies().forEach(enemy -> {
+            NameIdModel<ULID> enemyModel = new NameIdModel<ULID>(
+                    enemy.getName(),
+                    enemy.getULID());
+            nationModel.getEnemies().add(enemyModel);
+        });
 
         ctx.json(nationModel);
     }
