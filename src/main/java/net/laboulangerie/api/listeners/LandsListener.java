@@ -54,7 +54,7 @@ public class LandsListener implements Listener {
                 land.getName(),
                 land.getULID());
 
-        eventModel.put("town", landModel);
+        eventModel.put("land", landModel);
         LaBoulangerieAPI.broadcast(eventModel);
     }
 

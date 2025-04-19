@@ -16,7 +16,7 @@ import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 
 public class SearchController {
-    @OpenApi(description = "Search for player, town or nation by name", operationId = "search", path = "/search/{query}", pathParams = {
+    @OpenApi(description = "Search for player, land or nation by name", operationId = "search", path = "/search/{query}", pathParams = {
             @OpenApiParam(name = "query", description = "Search query") }, methods = HttpMethod.GET, tags = {
                     "Search" }, responses = {
                             @OpenApiResponse(status = "200", description = "Query results", content = {

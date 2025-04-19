@@ -105,10 +105,10 @@ public class PlayerController {
             Land land = resident.getLands().iterator().hasNext() ? resident.getLands().iterator().next() : null;
 
             if (land != null) {
-                NameIdModel<ULID> townModel = new NameIdModel<ULID>(
+                NameIdModel<ULID> landModel = new NameIdModel<ULID>(
                         land.getName(),
                         land.getULID());
-                residentModel.setLand(townModel);
+                residentModel.setLand(landModel);
                 residentModel.setIsMayor(land.getOwnerUID().equals(offlinePlayer.getUniqueId()));
 
                 Nation nation = land.getNation();

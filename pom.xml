@@ -76,10 +76,6 @@
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
         <repository>
-            <id>glaremasters repo</id>
-            <url>https://repo.glaremasters.me/repository/towny/</url>
-        </repository>
-        <repository>
             <id>reposilite-repository</id>
             <url>https://maven.reposilite.com/snapshots</url>
         </repository>

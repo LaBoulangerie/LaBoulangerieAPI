@@ -155,7 +155,7 @@ public class LaBoulangerieAPI extends JavaPlugin {
             });
         });
 
-        app.ws("/ws/towny", ws -> {
+        app.ws("/ws/lands", ws -> {
             ws.onConnect(ctx -> {
                 wsList.add(ctx);
             });
