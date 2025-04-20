@@ -79,7 +79,7 @@ public class LandController {
         LandModel landModel = new LandModel();
 
         landModel.setName(land.getName());
-        landModel.setUlid(land.getULID());
+        landModel.setUlid(land.getULID().toString());
 
         Nation nation = land.getNation();
 

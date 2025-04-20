@@ -75,7 +75,7 @@ public class NationController {
         NationModel nationModel = new NationModel();
 
         nationModel.setName(nation.getName());
-        nationModel.setUlid(nation.getULID());
+        nationModel.setUlid(nation.getULID().toString());
 
         OfflinePlayer king;
         try {

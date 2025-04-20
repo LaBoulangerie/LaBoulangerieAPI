@@ -4,11 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.angeschossen.lands.api.applicationframework.util.ULID;
-
 public class LandModel implements Serializable {
     private String name = null;
-    private ULID ulid = null;
+    private String ulid = null;
     private NameIdModel nation = null;
     private NameIdModel mayor = null;
     private String titleMessage = null;
@@ -29,11 +27,11 @@ public class LandModel implements Serializable {
         this.name = name;
     }
 
-    public ULID getUlid() {
+    public String getUlid() {
         return ulid;
     }
 
-    public void setUlid(ULID ulid) {
+    public void setUlid(String ulid) {
         this.ulid = ulid;
     }
 
