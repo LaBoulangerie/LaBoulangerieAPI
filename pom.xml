@@ -76,10 +76,6 @@
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
         <repository>
-            <id>glaremasters repo</id>
-            <url>https://repo.glaremasters.me/repository/towny/</url>
-        </repository>
-        <repository>
             <id>reposilite-repository</id>
             <url>https://maven.reposilite.com/snapshots</url>
         </repository>
@@ -101,9 +97,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.palmergames.bukkit.towny</groupId>
-            <artifactId>towny</artifactId>
-            <version>0.98.0.0</version>
+            <groupId>com.github.angeschossen</groupId>
+            <artifactId>LandsAPI</artifactId>
+            <version>7.10.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

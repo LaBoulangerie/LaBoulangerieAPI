@@ -3,6 +3,7 @@ package net.laboulangerie.api.models;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class ServerModel implements Serializable {
     private String name = null;
@@ -11,7 +12,7 @@ public class ServerModel implements Serializable {
     private String bukkitVersion = null;
     private String tps = null;
     private int maxPlayers = 0;
-    private List<NameUuidModel> onlinePlayers = Collections.emptyList();
+    private List<NameIdModel<UUID>> onlinePlayers = Collections.emptyList();
 
     public String getName() {
         return name;
@@ -61,11 +62,11 @@ public class ServerModel implements Serializable {
         this.maxPlayers = maxPlayers;
     }
 
-    public List<NameUuidModel> getOnlinePlayers() {
+    public List<NameIdModel<UUID>> getOnlinePlayers() {
         return onlinePlayers;
     }
 
-    public void setOnlinePlayers(List<NameUuidModel> onlinePlayers) {
+    public void setOnlinePlayers(List<NameIdModel<UUID>> onlinePlayers) {
         this.onlinePlayers = onlinePlayers;
     }
 }

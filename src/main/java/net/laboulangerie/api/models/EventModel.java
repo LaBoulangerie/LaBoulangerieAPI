@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class EventModel implements Serializable {
 
     private String event = null;
-    private HashMap<String, NameUuidModel> data = new HashMap<>();
+    private HashMap<String, NameIdModel<?>> data = new HashMap<>();
 
     public String getEvent() {
         return event;
@@ -16,15 +16,15 @@ public class EventModel implements Serializable {
         this.event = event;
     }
 
-    public HashMap<String, NameUuidModel> getData() {
+    public HashMap<String, NameIdModel<?>> getData() {
         return data;
     }
 
-    public void put(String string, NameUuidModel model) {
+    public void put(String string, NameIdModel<?> model) {
         this.data.put(string, model);
     }
 
-    public void setData(HashMap<String, NameUuidModel> data) {
+    public void setData(HashMap<String, NameIdModel<?>> data) {
         this.data = data;
     }
 }

@@ -10,27 +10,17 @@ import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiResponse;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.BoundExtractedResult;
-import net.laboulangerie.api.models.NameUuidModel;
-import net.laboulangerie.api.models.TypedNameUuidModel;
+import net.laboulangerie.api.models.NameIdModel;
+import net.laboulangerie.api.models.TypedNameIdModel;
 import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 
 public class SearchController {
-
-    public static TypedNameUuidModel typedAs(NameUuidModel model, String type) {
-        TypedNameUuidModel typedNameUuidModel = new TypedNameUuidModel();
-        typedNameUuidModel.setName(model.getName());
-        typedNameUuidModel.setUuid(model.getUuid());
-        typedNameUuidModel.setType(type);
-
-        return typedNameUuidModel;
-    }
-
-    @OpenApi(description = "Search for player, town or nation by name", operationId = "search", path = "/search/{query}", pathParams = {
+    @OpenApi(description = "Search for player, land or nation by name", operationId = "search", path = "/search/{query}", pathParams = {
             @OpenApiParam(name = "query", description = "Search query") }, methods = HttpMethod.GET, tags = {
                     "Search" }, responses = {
                             @OpenApiResponse(status = "200", description = "Query results", content = {
-                                    @OpenApiContent(from = NameUuidModel[].class) })
+                                    @OpenApiContent(from = NameIdModel[].class) })
                     })
     public static void search(Context ctx) {
         String query;
@@ -41,26 +31,26 @@ public class SearchController {
             throw new BadRequestResponse();
         }
 
-        List<TypedNameUuidModel> all = new ArrayList<>();
+        List<TypedNameIdModel<?>> all = new ArrayList<>();
         NationController.getAllNations().forEach((n) -> {
-            all.add(typedAs(n, "nation"));
+            all.add(new TypedNameIdModel<>(n, "nation"));
         });
 
-        TownController.getAllTowns().forEach((t) -> {
-            all.add(typedAs(t, "town"));
+        LandController.getAllLands().forEach((t) -> {
+            all.add(new TypedNameIdModel<>(t, "land"));
         });
 
         PlayerController.getAllPlayers().forEach((p) -> {
-            all.add(typedAs(p, "player"));
+            all.add(new TypedNameIdModel<>(p, "player"));
         });
 
-        List<BoundExtractedResult<TypedNameUuidModel>> topExtractedResults = FuzzySearch.extractTop(query, all,
+        List<BoundExtractedResult<TypedNameIdModel<?>>> topExtractedResults = FuzzySearch.extractTop(query, all,
                 x -> x.getName(),
                 10);
 
-        List<TypedNameUuidModel> topResults = new ArrayList<>();
+        List<TypedNameIdModel<?>> topResults = new ArrayList<>();
 
-        for (BoundExtractedResult<TypedNameUuidModel> res : topExtractedResults) {
+        for (BoundExtractedResult<TypedNameIdModel<?>> res : topExtractedResults) {
             topResults.add(res.getReferent());
         }
 

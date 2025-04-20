@@ -25,6 +25,7 @@ import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
 import io.javalin.security.RouteRole;
 import io.javalin.websocket.WsContext;
 import javalinjwt.JavalinJWT;
+import me.angeschossen.lands.api.LandsIntegration;
 import net.laboulangerie.api.commands.GenerateCommand;
 import net.laboulangerie.api.controllers.DonorsController;
 import net.laboulangerie.api.controllers.NationController;
@@ -32,15 +33,16 @@ import net.laboulangerie.api.controllers.PlayerController;
 import net.laboulangerie.api.controllers.SearchController;
 import net.laboulangerie.api.controllers.ServerController;
 import net.laboulangerie.api.controllers.StaffController;
-import net.laboulangerie.api.controllers.TownController;
+import net.laboulangerie.api.controllers.LandController;
 import net.laboulangerie.api.controllers.VoteController;
 import net.laboulangerie.api.jwt.JwtLevel;
 import net.laboulangerie.api.jwt.JwtManager;
-import net.laboulangerie.api.listeners.TownyListener;
+import net.laboulangerie.api.listeners.LandsListener;
 
 public class LaBoulangerieAPI extends JavaPlugin {
     public static LaBoulangerieAPI PLUGIN;
     public static JwtManager JWT_MANAGER;
+    public static LandsIntegration LANDS_INTEGRATION;
     private static Javalin app = null;
     private static final List<WsContext> wsList = new ArrayList<>();
 
@@ -48,7 +50,7 @@ public class LaBoulangerieAPI extends JavaPlugin {
     public void onEnable() {
         LaBoulangerieAPI.PLUGIN = this;
         LaBoulangerieAPI.JWT_MANAGER = new JwtManager();
-
+        LaBoulangerieAPI.LANDS_INTEGRATION = LandsIntegration.of(this);
         this.saveDefaultConfig();
 
         getCommand("generate").setExecutor(new GenerateCommand());
@@ -137,10 +139,10 @@ public class LaBoulangerieAPI extends JavaPlugin {
                     get(NationController::getNation, JwtLevel.ANYONE);
                 });
             });
-            path("town", () -> {
-                get(TownController::getTowns, JwtLevel.ANYONE);
+            path("land", () -> {
+                get(LandController::getLands, JwtLevel.ANYONE);
                 path("{identifier}", () -> {
-                    get(TownController::getTown, JwtLevel.ANYONE);
+                    get(LandController::getLand, JwtLevel.ANYONE);
                 });
             });
             path("search", () -> {
@@ -153,7 +155,7 @@ public class LaBoulangerieAPI extends JavaPlugin {
             });
         });
 
-        app.ws("/ws/towny", ws -> {
+        app.ws("/ws/lands", ws -> {
             ws.onConnect(ctx -> {
                 wsList.add(ctx);
             });
@@ -168,7 +170,7 @@ public class LaBoulangerieAPI extends JavaPlugin {
 
     private void registerListeners() {
         List<Listener> listeners = Arrays.asList(
-                new TownyListener());
+                new LandsListener());
 
         listeners.forEach(l -> getServer().getPluginManager().registerEvents(l, this));
     }

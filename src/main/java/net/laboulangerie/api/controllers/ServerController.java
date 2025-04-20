@@ -2,6 +2,7 @@ package net.laboulangerie.api.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -13,7 +14,7 @@ import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiResponse;
 import io.javalin.openapi.OpenApiContent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import net.laboulangerie.api.models.NameUuidModel;
+import net.laboulangerie.api.models.NameIdModel;
 import net.laboulangerie.api.models.ServerModel;
 
 public class ServerController {
@@ -34,13 +35,12 @@ public class ServerController {
         model.setMaxPlayers(bukkitServer.getMaxPlayers());
 
         List<Player> onlinePlayers = bukkitServer.getOnlinePlayers().stream().collect(Collectors.toList());
-        List<NameUuidModel> onlinePlayerModels = new ArrayList<>();
+        List<NameIdModel<UUID>> onlinePlayerModels = new ArrayList<>();
 
         for (Player player : onlinePlayers) {
-            NameUuidModel onlinePlayerModel = new NameUuidModel();
-
-            onlinePlayerModel.setName(player.getName());
-            onlinePlayerModel.setUuid(player.getUniqueId());
+            NameIdModel<UUID> onlinePlayerModel = new NameIdModel<UUID>(
+                    player.getName(),
+                    player.getUniqueId());
 
             onlinePlayerModels.add(onlinePlayerModel);
         }
