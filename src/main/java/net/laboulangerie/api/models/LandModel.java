@@ -1,7 +1,7 @@
 package net.laboulangerie.api.models;
 
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
