@@ -27,14 +27,14 @@ import net.laboulangerie.api.models.NameIdModel;
 
 public class LandController {
 
-    public static List<NameIdModel<ULID>> getAllLands() {
-        ArrayList<NameIdModel<ULID>> landModels = new ArrayList<>();
+    public static List<NameIdModel> getAllLands() {
+        ArrayList<NameIdModel> landModels = new ArrayList<>();
         Collection<Land> lands = LaBoulangerieAPI.LANDS_INTEGRATION.getLands();
 
         for (Land land : lands) {
-            NameIdModel<ULID> landModel = new NameIdModel<ULID>(
+            NameIdModel landModel = new NameIdModel(
                     land.getName(),
-                    land.getULID());
+                    land.getULID().toString());
             landModels.add(landModel);
         }
 
@@ -84,9 +84,9 @@ public class LandController {
         Nation nation = land.getNation();
 
         if (nation != null) {
-            NameIdModel<ULID> nationModel = new NameIdModel<ULID>(
+            NameIdModel nationModel = new NameIdModel(
                     nation.getName(),
-                    nation.getULID());
+                    nation.getULID().toString());
 
             landModel.setNation(nationModel);
         }
@@ -98,9 +98,9 @@ public class LandController {
             throw new RuntimeException("Failed to retrieve the mayor information", e);
         }
 
-        NameIdModel<UUID> mayorModel = new NameIdModel<UUID>(
+        NameIdModel mayorModel = new NameIdModel(
                 mayor.getName(),
-                mayor.getUID());
+                mayor.getUID().toString());
         landModel.setMayor(mayorModel);
 
         landModel.setTitleMessage(land.getTitleMessage(null));
@@ -109,12 +109,12 @@ public class LandController {
         landModel.setColor(land.getColorName());
 
         Collection<UUID> residentsUUIDs = land.getTrustedPlayers();
-        List<NameIdModel<UUID>> residentModels = new ArrayList<>();
+        List<NameIdModel> residentModels = new ArrayList<>();
 
         for (UUID residentUUID : residentsUUIDs) {
-            NameIdModel<UUID> residentModel = new NameIdModel<UUID>(
+            NameIdModel residentModel = new NameIdModel(
                     Bukkit.getOfflinePlayer(residentUUID).getName(),
-                    residentUUID);
+                    residentUUID.toString());
 
             residentModels.add(residentModel);
         }
@@ -147,17 +147,17 @@ public class LandController {
         });
 
         land.getAllies().forEach((ally) -> {
-            NameIdModel<ULID> allyModel = new NameIdModel<ULID>(
+            NameIdModel allyModel = new NameIdModel(
                     ally.getName(),
-                    ally.getULID());
+                    ally.getULID().toString());
 
             landModel.getAllies().add(allyModel);
         });
 
         land.getEnemies().forEach((enemy) -> {
-            NameIdModel<ULID> enemyModel = new NameIdModel<ULID>(
+            NameIdModel enemyModel = new NameIdModel(
                     enemy.getName(),
-                    enemy.getULID());
+                    enemy.getULID().toString());
 
             landModel.getEnemies().add(enemyModel);
         });

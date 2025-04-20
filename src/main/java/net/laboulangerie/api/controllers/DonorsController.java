@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.OptionalInt;
-import java.util.UUID;
 import java.util.stream.IntStream;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -26,8 +25,8 @@ import net.laboulangerie.api.models.TypedNameIdModel;
 public class DonorsController {
     private static File donorsFile = new File(LaBoulangerieAPI.PLUGIN.getDataFolder(), "donors.json");
 
-    public static List<TypedNameIdModel<UUID>> getDonorsArray() {
-        List<TypedNameIdModel<UUID>> donorsArray = new ArrayList<>();
+    public static List<TypedNameIdModel> getDonorsArray() {
+        List<TypedNameIdModel> donorsArray = new ArrayList<>();
 
         try {
             donorsArray = Arrays.asList(GsonFiles.readArray(donorsFile));
@@ -55,11 +54,11 @@ public class DonorsController {
         if (decodedJWT == null)
             return;
 
-        TypedNameIdModel<UUID> newDonor = new Gson().fromJson(ctx.body(),
-                new com.google.gson.reflect.TypeToken<TypedNameIdModel<UUID>>() {
+        TypedNameIdModel newDonor = new Gson().fromJson(ctx.body(),
+                new com.google.gson.reflect.TypeToken<TypedNameIdModel>() {
                 }.getType());
 
-        List<TypedNameIdModel<UUID>> donorsArray = new ArrayList<>(getDonorsArray());
+        List<TypedNameIdModel> donorsArray = new ArrayList<>(getDonorsArray());
 
         // Check if donor already exists
         OptionalInt index = IntStream.range(0, donorsArray.size())
@@ -67,7 +66,7 @@ public class DonorsController {
                 .findFirst();
 
         if (index.isPresent()) {
-            TypedNameIdModel<UUID> donor = donorsArray.get(index.getAsInt());
+            TypedNameIdModel donor = donorsArray.get(index.getAsInt());
             // Increment the type (donation amount)
             donor.setType(Integer.toString(Integer.parseInt(donor.getType()) + Integer.parseInt(newDonor.getType())));
         } else {
@@ -91,10 +90,10 @@ public class DonorsController {
         if (decodedJWT == null)
             return;
 
-        TypedNameIdModel<UUID> donorToDelete = new Gson().fromJson(ctx.body(),
-                new com.google.gson.reflect.TypeToken<TypedNameIdModel<UUID>>() {
+        TypedNameIdModel donorToDelete = new Gson().fromJson(ctx.body(),
+                new com.google.gson.reflect.TypeToken<TypedNameIdModel>() {
                 }.getType());
-        List<TypedNameIdModel<UUID>> donorArray = new ArrayList<>(getDonorsArray());
+        List<TypedNameIdModel> donorArray = new ArrayList<>(getDonorsArray());
 
         donorArray.removeIf(
                 d -> (d.getId().equals(donorToDelete.getId()))

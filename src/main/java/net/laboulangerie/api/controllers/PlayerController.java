@@ -14,7 +14,6 @@ import io.javalin.http.NotFoundResponse;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiResponse;
-import me.angeschossen.lands.api.applicationframework.util.ULID;
 import me.angeschossen.lands.api.land.Land;
 import me.angeschossen.lands.api.nation.Nation;
 import io.javalin.openapi.OpenApiContent;
@@ -30,13 +29,14 @@ import net.laboulangerie.laboulangeriemmo.api.player.MmoPlayer;
 
 public class PlayerController {
 
-    public static List<NameIdModel<UUID>> getAllPlayers() {
-        ArrayList<NameIdModel<UUID>> players = new ArrayList<>();
+    public static List<NameIdModel> getAllPlayers() {
+        ArrayList<NameIdModel> players = new ArrayList<>();
         OfflinePlayer[] offlinePlayers = Bukkit.getOfflinePlayers();
 
         for (OfflinePlayer offlinePlayer : offlinePlayers) {
-            NameIdModel<UUID> model = new NameIdModel<UUID>(offlinePlayer.getName(),
-                    offlinePlayer.getUniqueId());
+            NameIdModel model = new NameIdModel(
+                    offlinePlayer.getName(),
+                    offlinePlayer.getUniqueId().toString());
             players.add(model);
         }
 
@@ -105,18 +105,18 @@ public class PlayerController {
             Land land = resident.getLands().iterator().hasNext() ? resident.getLands().iterator().next() : null;
 
             if (land != null) {
-                NameIdModel<ULID> landModel = new NameIdModel<ULID>(
+                NameIdModel landModel = new NameIdModel(
                         land.getName(),
-                        land.getULID());
+                        land.getULID().toString());
                 residentModel.setLand(landModel);
                 residentModel.setIsMayor(land.getOwnerUID().equals(offlinePlayer.getUniqueId()));
 
                 Nation nation = land.getNation();
 
                 if (nation != null) {
-                    NameIdModel<ULID> nationModel = new NameIdModel<ULID>(
+                    NameIdModel nationModel = new NameIdModel(
                             nation.getName(),
-                            nation.getULID());
+                            nation.getULID().toString());
                     residentModel.setNation(nationModel);
                     residentModel.setIsKing(nation.getOwnerUID().equals(offlinePlayer.getUniqueId()));
                 }

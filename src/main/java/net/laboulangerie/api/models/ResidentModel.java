@@ -2,29 +2,27 @@ package net.laboulangerie.api.models;
 
 import java.io.Serializable;
 
-import me.angeschossen.lands.api.applicationframework.util.ULID;
-
 public class ResidentModel implements Serializable {
-    private NameIdModel<ULID> land = null;
-    private NameIdModel<ULID> nation = null;
+    private NameIdModel land = null;
+    private NameIdModel nation = null;
     private Boolean isMayor = false;
     private Boolean isKing = false;
     private String roleName = null;
     private int balance = 0;
 
-    public NameIdModel<ULID> getLand() {
+    public NameIdModel getLand() {
         return land;
     }
 
-    public void setLand(NameIdModel<ULID> land) {
+    public void setLand(NameIdModel land) {
         this.land = land;
     }
 
-    public NameIdModel<ULID> getNation() {
+    public NameIdModel getNation() {
         return nation;
     }
 
-    public void setNation(NameIdModel<ULID> nation) {
+    public void setNation(NameIdModel nation) {
         this.nation = nation;
     }
 

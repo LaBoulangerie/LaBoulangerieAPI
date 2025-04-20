@@ -3,24 +3,23 @@ package net.laboulangerie.api.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import me.angeschossen.lands.api.applicationframework.util.ULID;
 
 public class LandModel implements Serializable {
     private String name = null;
     private ULID ulid = null;
-    private NameIdModel<ULID> nation = null;
-    private NameIdModel<UUID> mayor = null;
+    private NameIdModel nation = null;
+    private NameIdModel mayor = null;
     private String titleMessage = null;
     private String levelName = null;
     private int balance = 0;
     private String color = null;
-    private List<NameIdModel<UUID>> residents = new ArrayList<>();
+    private List<NameIdModel> residents = new ArrayList<>();
     private CoordinatesModel spawn = null;
     private List<CoordinatesModel> chunksCoordinates = new ArrayList<>();
-    private List<NameIdModel<ULID>> enemies = new ArrayList<>();
-    private List<NameIdModel<ULID>> allies = new ArrayList<>();
+    private List<NameIdModel> enemies = new ArrayList<>();
+    private List<NameIdModel> allies = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -38,19 +37,19 @@ public class LandModel implements Serializable {
         this.ulid = ulid;
     }
 
-    public NameIdModel<ULID> getNation() {
+    public NameIdModel getNation() {
         return nation;
     }
 
-    public void setNation(NameIdModel<ULID> nation) {
+    public void setNation(NameIdModel nation) {
         this.nation = nation;
     }
 
-    public NameIdModel<UUID> getMayor() {
+    public NameIdModel getMayor() {
         return mayor;
     }
 
-    public void setMayor(NameIdModel<UUID> mayor) {
+    public void setMayor(NameIdModel mayor) {
         this.mayor = mayor;
     }
 
@@ -86,11 +85,11 @@ public class LandModel implements Serializable {
         this.color = color;
     }
 
-    public List<NameIdModel<UUID>> getResidents() {
+    public List<NameIdModel> getResidents() {
         return residents;
     }
 
-    public void setResidents(List<NameIdModel<UUID>> residents) {
+    public void setResidents(List<NameIdModel> residents) {
         this.residents = residents;
     }
 
@@ -110,19 +109,19 @@ public class LandModel implements Serializable {
         this.chunksCoordinates = chunksCoordinates;
     }
 
-    public List<NameIdModel<ULID>> getEnemies() {
+    public List<NameIdModel> getEnemies() {
         return enemies;
     }
 
-    public void setEnemies(List<NameIdModel<ULID>> enemies) {
+    public void setEnemies(List<NameIdModel> enemies) {
         this.enemies = enemies;
     }
 
-    public List<NameIdModel<ULID>> getAllies() {
+    public List<NameIdModel> getAllies() {
         return allies;
     }
 
-    public void setAllies(List<NameIdModel<ULID>> allies) {
+    public void setAllies(List<NameIdModel> allies) {
         this.allies = allies;
     }
 

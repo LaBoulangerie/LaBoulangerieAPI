@@ -31,26 +31,26 @@ public class SearchController {
             throw new BadRequestResponse();
         }
 
-        List<TypedNameIdModel<?>> all = new ArrayList<>();
+        List<TypedNameIdModel> all = new ArrayList<>();
         NationController.getAllNations().forEach((n) -> {
-            all.add(new TypedNameIdModel<>(n, "nation"));
+            all.add(new TypedNameIdModel(n, "nation"));
         });
 
         LandController.getAllLands().forEach((t) -> {
-            all.add(new TypedNameIdModel<>(t, "land"));
+            all.add(new TypedNameIdModel(t, "land"));
         });
 
         PlayerController.getAllPlayers().forEach((p) -> {
-            all.add(new TypedNameIdModel<>(p, "player"));
+            all.add(new TypedNameIdModel(p, "player"));
         });
 
-        List<BoundExtractedResult<TypedNameIdModel<?>>> topExtractedResults = FuzzySearch.extractTop(query, all,
+        List<BoundExtractedResult<TypedNameIdModel>> topExtractedResults = FuzzySearch.extractTop(query, all,
                 x -> x.getName(),
                 10);
 
-        List<TypedNameIdModel<?>> topResults = new ArrayList<>();
+        List<TypedNameIdModel> topResults = new ArrayList<>();
 
-        for (BoundExtractedResult<TypedNameIdModel<?>> res : topExtractedResults) {
+        for (BoundExtractedResult<TypedNameIdModel> res : topExtractedResults) {
             topResults.add(res.getReferent());
         }
 

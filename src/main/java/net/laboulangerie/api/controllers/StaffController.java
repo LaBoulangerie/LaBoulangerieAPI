@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.OptionalInt;
-import java.util.UUID;
 import java.util.stream.IntStream;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -28,8 +27,8 @@ public class StaffController {
     private static List<String> staffHierarchy = Arrays.asList("owner", "mod", "multi", "dev", "builder", "cm",
             "contributor");
 
-    public static List<TypedNameIdModel<UUID>> getStaffArray() {
-        List<TypedNameIdModel<UUID>> staffArray = new ArrayList<>();
+    public static List<TypedNameIdModel> getStaffArray() {
+        List<TypedNameIdModel> staffArray = new ArrayList<>();
 
         try {
             staffArray = Arrays.asList(GsonFiles.readArray(staffFile));
@@ -57,10 +56,10 @@ public class StaffController {
         if (decodedJWT == null)
             return;
 
-        TypedNameIdModel<UUID> newStaff = new Gson().fromJson(ctx.body(),
-                new com.google.gson.reflect.TypeToken<TypedNameIdModel<UUID>>() {
+        TypedNameIdModel newStaff = new Gson().fromJson(ctx.body(),
+                new com.google.gson.reflect.TypeToken<TypedNameIdModel>() {
                 }.getType());
-        List<TypedNameIdModel<UUID>> staffArray = new ArrayList<>(getStaffArray());
+        List<TypedNameIdModel> staffArray = new ArrayList<>(getStaffArray());
 
         // Check if staff already exists
         OptionalInt index = IntStream.range(0, staffArray.size())
@@ -74,9 +73,9 @@ public class StaffController {
 
         staffArray.add(newStaff);
 
-        staffArray.sort(new Comparator<TypedNameIdModel<UUID>>() {
+        staffArray.sort(new Comparator<TypedNameIdModel>() {
             @Override
-            public int compare(TypedNameIdModel<UUID> o1, TypedNameIdModel<UUID> o2) {
+            public int compare(TypedNameIdModel o1, TypedNameIdModel o2) {
                 return Integer.compare(staffHierarchy.indexOf(o1.getType()), staffHierarchy.indexOf(o2.getType()));
             }
         });
@@ -96,10 +95,10 @@ public class StaffController {
         if (decodedJWT == null)
             return;
 
-        TypedNameIdModel<UUID> staffToDelete = new Gson().fromJson(ctx.body(),
-                new com.google.gson.reflect.TypeToken<TypedNameIdModel<UUID>>() {
+        TypedNameIdModel staffToDelete = new Gson().fromJson(ctx.body(),
+                new com.google.gson.reflect.TypeToken<TypedNameIdModel>() {
                 }.getType());
-        List<TypedNameIdModel<UUID>> staffArray = new ArrayList<>(getStaffArray());
+        List<TypedNameIdModel> staffArray = new ArrayList<>(getStaffArray());
 
         staffArray.removeIf(
                 d -> (d.getId().equals(staffToDelete.getId()))

@@ -3,7 +3,6 @@ package net.laboulangerie.api.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import me.angeschossen.lands.api.applicationframework.util.ULID;
 
@@ -11,13 +10,13 @@ public class NationModel implements Serializable {
     private String name = null;
     private ULID ulid = null;
 
-    private NameIdModel<UUID> king = null;
-    private NameIdModel<ULID> capital = null;
+    private NameIdModel king = null;
+    private NameIdModel capital = null;
     private int balance = 0;
     private String color = null;
-    private List<NameIdModel<ULID>> lands = new ArrayList<>();
-    private List<NameIdModel<ULID>> enemies = new ArrayList<>();
-    private List<NameIdModel<ULID>> allies = new ArrayList<>();
+    private List<NameIdModel> lands = new ArrayList<>();
+    private List<NameIdModel> enemies = new ArrayList<>();
+    private List<NameIdModel> allies = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -35,19 +34,19 @@ public class NationModel implements Serializable {
         this.ulid = ulid;
     }
 
-    public NameIdModel<UUID> getKing() {
+    public NameIdModel getKing() {
         return king;
     }
 
-    public void setKing(NameIdModel<UUID> king) {
+    public void setKing(NameIdModel king) {
         this.king = king;
     }
 
-    public NameIdModel<ULID> getCapital() {
+    public NameIdModel getCapital() {
         return capital;
     }
 
-    public void setCapital(NameIdModel<ULID> capital) {
+    public void setCapital(NameIdModel capital) {
         this.capital = capital;
     }
 
@@ -67,27 +66,27 @@ public class NationModel implements Serializable {
         this.color = color;
     }
 
-    public List<NameIdModel<ULID>> getLands() {
+    public List<NameIdModel> getLands() {
         return lands;
     }
 
-    public void setLands(List<NameIdModel<ULID>> lands) {
+    public void setLands(List<NameIdModel> lands) {
         this.lands = lands;
     }
 
-    public List<NameIdModel<ULID>> getEnemies() {
+    public List<NameIdModel> getEnemies() {
         return enemies;
     }
 
-    public void setEnemies(List<NameIdModel<ULID>> enemies) {
+    public void setEnemies(List<NameIdModel> enemies) {
         this.enemies = enemies;
     }
 
-    public List<NameIdModel<ULID>> getAllies() {
+    public List<NameIdModel> getAllies() {
         return allies;
     }
 
-    public void setAllies(List<NameIdModel<ULID>> allies) {
+    public void setAllies(List<NameIdModel> allies) {
         this.allies = allies;
     }
 

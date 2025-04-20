@@ -2,7 +2,6 @@ package net.laboulangerie.api.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -35,12 +34,12 @@ public class ServerController {
         model.setMaxPlayers(bukkitServer.getMaxPlayers());
 
         List<Player> onlinePlayers = bukkitServer.getOnlinePlayers().stream().collect(Collectors.toList());
-        List<NameIdModel<UUID>> onlinePlayerModels = new ArrayList<>();
+        List<NameIdModel> onlinePlayerModels = new ArrayList<>();
 
         for (Player player : onlinePlayers) {
-            NameIdModel<UUID> onlinePlayerModel = new NameIdModel<UUID>(
+            NameIdModel onlinePlayerModel = new NameIdModel(
                     player.getName(),
-                    player.getUniqueId());
+                    player.getUniqueId().toString());
 
             onlinePlayerModels.add(onlinePlayerModel);
         }

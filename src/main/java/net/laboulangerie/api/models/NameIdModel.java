@@ -2,11 +2,11 @@ package net.laboulangerie.api.models;
 
 import java.io.Serializable;
 
-public class NameIdModel<T> implements Serializable {
+public class NameIdModel implements Serializable {
     private String name = null;
-    private T id = null;
+    private String id = null;
 
-    public NameIdModel(String name, T id) {
+    public NameIdModel(String name, String id) {
         this.name = name;
         this.id = id;
     }
@@ -15,7 +15,7 @@ public class NameIdModel<T> implements Serializable {
         return name;
     }
 
-    public T getId() {
+    public String getId() {
         return id;
     }
 }

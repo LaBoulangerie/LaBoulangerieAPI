@@ -3,7 +3,6 @@ package net.laboulangerie.api.controllers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import io.javalin.http.Context;
@@ -23,14 +22,14 @@ import net.laboulangerie.api.models.NationModel;
 
 public class NationController {
 
-    public static List<NameIdModel<ULID>> getAllNations() {
-        ArrayList<NameIdModel<ULID>> nationModels = new ArrayList<>();
+    public static List<NameIdModel> getAllNations() {
+        ArrayList<NameIdModel> nationModels = new ArrayList<>();
         Collection<Nation> nations = LaBoulangerieAPI.LANDS_INTEGRATION.getNations();
 
         for (Nation nation : nations) {
-            NameIdModel<ULID> model = new NameIdModel<ULID>(
+            NameIdModel model = new NameIdModel(
                     nation.getName(),
-                    nation.getULID());
+                    nation.getULID().toString());
 
             nationModels.add(model);
         }
@@ -85,38 +84,38 @@ public class NationController {
             throw new RuntimeException("Failed to retrieve the mayor information", e);
         }
 
-        NameIdModel<UUID> kingModel = new NameIdModel<UUID>(
+        NameIdModel kingModel = new NameIdModel(
                 king.getName(),
-                king.getUID());
+                king.getUID().toString());
         nationModel.setKing(kingModel);
 
         Land capital = nation.getCapital();
-        NameIdModel<ULID> capitalModel = new NameIdModel<ULID>(
+        NameIdModel capitalModel = new NameIdModel(
                 capital.getName(),
-                capital.getULID());
+                capital.getULID().toString());
         nationModel.setCapital(capitalModel);
 
         nationModel.setBalance((int) nation.getBalance());
         nationModel.setColor(nation.getColorName());
 
         nation.getLands().forEach(land -> {
-            NameIdModel<ULID> landModel = new NameIdModel<ULID>(
+            NameIdModel landModel = new NameIdModel(
                     land.getName(),
-                    land.getULID());
+                    land.getULID().toString());
             nationModel.getLands().add(landModel);
         });
 
         nation.getAllies().forEach(ally -> {
-            NameIdModel<ULID> allyModel = new NameIdModel<ULID>(
+            NameIdModel allyModel = new NameIdModel(
                     ally.getName(),
-                    ally.getULID());
+                    ally.getULID().toString());
             nationModel.getAllies().add(allyModel);
         });
 
         nation.getEnemies().forEach(enemy -> {
-            NameIdModel<ULID> enemyModel = new NameIdModel<ULID>(
+            NameIdModel enemyModel = new NameIdModel(
                     enemy.getName(),
-                    enemy.getULID());
+                    enemy.getULID().toString());
             nationModel.getEnemies().add(enemyModel);
         });
 

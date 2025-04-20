@@ -3,7 +3,6 @@ package net.laboulangerie.api.listeners;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import me.angeschossen.lands.api.applicationframework.util.ULID;
 import me.angeschossen.lands.api.events.LandCreateEvent;
 import me.angeschossen.lands.api.events.LandDeleteEvent;
 import me.angeschossen.lands.api.events.nation.edit.NationCreateEvent;
@@ -22,9 +21,9 @@ public class LandsListener implements Listener {
         eventModel.setEvent(event.getEventName());
 
         Land land = event.getLand();
-        NameIdModel<ULID> landModel = new NameIdModel<ULID>(
+        NameIdModel landModel = new NameIdModel(
                 land.getName(),
-                land.getULID());
+                land.getULID().toString());
 
         eventModel.put("land", landModel);
         LaBoulangerieAPI.broadcast(eventModel);
@@ -36,9 +35,9 @@ public class LandsListener implements Listener {
         eventModel.setEvent(event.getEventName());
 
         Nation nation = event.getNation();
-        NameIdModel<ULID> nationModel = new NameIdModel<ULID>(
+        NameIdModel nationModel = new NameIdModel(
                 nation.getName(),
-                nation.getULID());
+                nation.getULID().toString());
 
         eventModel.put("nation", nationModel);
         LaBoulangerieAPI.broadcast(eventModel);
@@ -50,9 +49,9 @@ public class LandsListener implements Listener {
         eventModel.setEvent(event.getEventName());
 
         Land land = event.getLand();
-        NameIdModel<ULID> landModel = new NameIdModel<ULID>(
+        NameIdModel landModel = new NameIdModel(
                 land.getName(),
-                land.getULID());
+                land.getULID().toString());
 
         eventModel.put("land", landModel);
         LaBoulangerieAPI.broadcast(eventModel);
@@ -64,9 +63,9 @@ public class LandsListener implements Listener {
         eventModel.setEvent(event.getEventName());
 
         Nation nation = event.getNation();
-        NameIdModel<ULID> nationModel = new NameIdModel<ULID>(
+        NameIdModel nationModel = new NameIdModel(
                 nation.getName(),
-                nation.getULID());
+                nation.getULID().toString());
 
         eventModel.put("nation", nationModel);
         LaBoulangerieAPI.broadcast(eventModel);
