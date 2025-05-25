@@ -27,7 +27,7 @@ public class GsonFiles {
         }
 
         return new Gson().fromJson(new FileReader(file),
-                new com.google.gson.reflect.TypeToken<TypedNameIdModel>() {
+                new com.google.gson.reflect.TypeToken<TypedNameIdModel[]>() {
                 }.getType());
     }
 
