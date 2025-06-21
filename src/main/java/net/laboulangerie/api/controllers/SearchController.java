@@ -33,15 +33,15 @@ public class SearchController {
 
         List<TypedNameIdModel> all = new ArrayList<>();
         NationController.getAllNations().forEach((n) -> {
-            all.add(new TypedNameIdModel(n, "nation"));
+            all.add(new TypedNameIdModel(n.getName(), n.getId(), "nation"));
         });
 
         LandController.getAllLands().forEach((t) -> {
-            all.add(new TypedNameIdModel(t, "land"));
+            all.add(new TypedNameIdModel(t.getName(), t.getId(), "land"));
         });
 
         PlayerController.getAllPlayers().forEach((p) -> {
-            all.add(new TypedNameIdModel(p, "player"));
+            all.add(new TypedNameIdModel(p.getName(), p.getId(), "player"));
         });
 
         List<BoundExtractedResult<TypedNameIdModel>> topExtractedResults = FuzzySearch.extractTop(query, all,

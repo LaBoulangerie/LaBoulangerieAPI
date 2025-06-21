@@ -1,16 +1,24 @@
 package net.laboulangerie.api.models;
 
-public class TypedNameIdModel extends NameIdModel {
-    private String type = null;
+import java.io.Serializable;
+
+public class TypedNameIdModel implements Serializable {
+    protected String name = null;
+    protected String id = null;
+    protected String type = null;
 
     public TypedNameIdModel(String name, String id, String type) {
-        super(name, id);
+        this.name = name;
+        this.id = id;
         this.type = type;
     }
 
-    public TypedNameIdModel(NameIdModel model, String type) {
-        super(model.getName(), model.getId());
-        this.type = type;
+    public String getName() {
+        return name;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getType() {
@@ -20,5 +28,4 @@ public class TypedNameIdModel extends NameIdModel {
     public void setType(String type) {
         this.type = type;
     }
-
 }
